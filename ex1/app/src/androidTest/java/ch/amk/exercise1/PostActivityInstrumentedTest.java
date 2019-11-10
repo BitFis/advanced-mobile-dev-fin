@@ -7,13 +7,13 @@ import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.awaitility.Awaitility;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
 
 @RunWith(AndroidJUnit4.class)
 public class PostActivityInstrumentedTest {
@@ -36,13 +36,11 @@ public class PostActivityInstrumentedTest {
 
         activity.getRequestQueue().addRequestFinishedListener(request -> {
             requestDone.set(true);
-            Log.i("test", "request received");
         });
 
         activity.fetchPost(activity.ENDPOINT);
 
-
-
+        Awaitility.await().untilTrue(requestDone);
 
         // todo test
     }

@@ -16,9 +16,6 @@ android {
             includeAndroidResources = true
         }
     }
-    packagingOptions {
-        exclude 'META-INF/LICENSE'
-    }
     buildTypes {
         release {
             minifyEnabled false
@@ -38,21 +35,40 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.android.volley:volley:1.1.1'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation ('junit:junit:4.12') {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation ('org.powermock:powermock:1.6.5') {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation ('org.powermock:powermock-module-junit4:1.6.5'){
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation ('org.powermock:powermock-api-mockito:1.6.5'){
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation ('com.android.support.test:rules:1.0.2') {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation ('com.android.support.test:runner:1.0.2') {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation 'org.awaitility:awaitility:4.0.1'
+    testImplementation 'org.hamcrest:hamcrest:2.1'
 
-    testImplementation 'org.powermock:powermock:1.6.5'
-    testImplementation 'org.powermock:powermock-module-junit4:1.6.5'
-    testImplementation 'org.powermock:powermock-api-mockito:1.6.5'
-
-    testImplementation 'com.android.support.test:rules:1.0.2'
-    testImplementation 'com.android.support.test:runner:1.0.2'
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation ('androidx.test.ext:junit:1.1.0') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation ('androidx.test.espresso:espresso-core:3.1.1') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation ('com.android.support.test:rules:1.0.2') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation ('com.android.support.test:runner:1.0.2') {
+        exclude group: 'org.hamcrest'
+    }
     androidTestImplementation 'org.awaitility:awaitility:4.0.1'
-    androidTestImplementation 'org.hamcrest:hamcrest-library:2.1'
-
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'org.hamcrest:hamcrest:2.1'
 
 }
