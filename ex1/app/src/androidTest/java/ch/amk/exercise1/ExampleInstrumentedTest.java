@@ -24,4 +24,5 @@ public class ExampleInstrumentedTest {
 
         assertEquals("ch.amk.exercise1", appContext.getPackageName());
     }
+
 }
