@@ -18,8 +18,10 @@ public class ExceptionBox {
     }
 
     public void show(@NonNull Activity activity) {
+        this.exception.printStackTrace();
+
         activity.runOnUiThread(() -> {
-            PopupWindow popup = new PopupWindow(activity);
+            //PopupWindow popup = new PopupWindow(activity);
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
             alertDialogBuilder
                     .setTitle(TITLE)

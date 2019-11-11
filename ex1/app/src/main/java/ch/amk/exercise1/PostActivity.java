@@ -17,6 +17,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import ch.amk.exercise1.utils.ExceptionBox;
+
 public class PostActivity extends Activity {
 
     public static final String ENDPOINT = "https://kylewbanks.com/rest/posts.json";
@@ -55,17 +57,8 @@ public class PostActivity extends Activity {
     };
     private final Response.ErrorListener onError = (VolleyError error) -> {
         Log.e("PostActivity", error.toString());
-        error.printStackTrace();
 
-        this.runOnUiThread(() -> {
-            PopupWindow popup = new PopupWindow(this);
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder
-                    .setTitle("Error occured during request")
-                    .setMessage(error.toString());
-
-            alertDialogBuilder.create().show();
-        });
+        new ExceptionBox(error).show(this);
     };
 
 }
