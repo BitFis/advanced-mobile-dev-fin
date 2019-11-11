@@ -1,9 +1,11 @@
 package ch.amk.exercise1;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.PopupWindow;
 import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
@@ -27,7 +29,10 @@ public class PostActivity extends Activity {
         this.setContentView(R.layout.post_activity);
 
         requestQueue = Volley.newRequestQueue(this.getApplicationContext());
+    }
 
+    public void setRequestQueue(RequestQueue requestQueue) {
+        this.requestQueue = requestQueue;
     }
 
     public RequestQueue getRequestQueue() {
@@ -50,6 +55,17 @@ public class PostActivity extends Activity {
     };
     private final Response.ErrorListener onError = (VolleyError error) -> {
         Log.e("PostActivity", error.toString());
+        error.printStackTrace();
+
+        this.runOnUiThread(() -> {
+            PopupWindow popup = new PopupWindow(this);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder
+                    .setTitle("Error occured during request")
+                    .setMessage(error.toString());
+
+            alertDialogBuilder.create().show();
+        });
     };
 
 }
