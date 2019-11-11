@@ -1,6 +1,7 @@
 package ch.amk.exercise1;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
@@ -32,6 +33,8 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Inject;
+
 @RunWith(AndroidJUnit4.class)
 public class PostActivityInstrumentedTest {
 
@@ -42,37 +45,35 @@ public class PostActivityInstrumentedTest {
             false);   // launchActivity. False to customize the intent
 
     private Context ctx;
+    private App app;
 
-    @Mock private Network mockNetwork;
+    @Inject protected RequestQueue requestQueue;
+    @Inject protected Network mockNetwork;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         this.ctx = InstrumentationRegistry.getInstrumentation().getContext();
 
-        App app = (App)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
-/*
-        MyComponentMock component = DaggerMyComponent
+        this.app = (App)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+
+        MyComponentMock component = DaggerMyComponentMock
                 .builder()
-                .application(app)
+                .application(this.app)
                 .build();
-        component.inject(app);
- */
-//        app.setComponent(component);
+        component.inject(this.app);
+        component.inject(this);
+
+        this.app.setComponent(component);
     }
 
     @Test
     public void fetchPost() throws VolleyError, InterruptedException, IOException {
-        RequestQueue requestQueue = new RequestQueue(new NoCache(), mockNetwork, 1, new ImmediateResponseDelivery());
-        PostActivity activity = this.activityRule.getActivity();
-
         AtomicBoolean requestDone = new AtomicBoolean(false);
-
-        requestQueue.start();
 
         Mockito
                 .when(mockNetwork.performRequest(ArgumentMatchers.any()))
-                .then(invocation -> new MockSuccessResponse(this.ctx, "fetchPostMock.json"));
+                .then(invocation -> new MockSuccessResponse("fetchPostMock.json"));
 
         requestQueue.addRequestFinishedListener(r -> {
             requestDone.set(true);
@@ -85,7 +86,5 @@ public class PostActivityInstrumentedTest {
 
         // check if ExceptionBox is showing
         Espresso.onView(ViewMatchers.withText(ExceptionBox.TITLE)).check(ViewAssertions.doesNotExist());
-
-        Thread.sleep(5000);
     }
 }

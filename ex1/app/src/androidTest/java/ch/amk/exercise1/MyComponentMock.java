@@ -1,8 +1,23 @@
 package ch.amk.exercise1;
 
-import ch.amk.exercise1.modules.Main;
+import android.app.Application;
+
+import javax.inject.Singleton;
+
+import ch.amk.exercise1.modules.MainMock;
+import dagger.BindsInstance;
 import dagger.Component;
 
-@Component(modules = Main.class)
+@Singleton
+@Component(modules = MainMock.class)
 public interface MyComponentMock extends MyComponent {
+    void inject(PostActivityInstrumentedTest postActivityInstrumentedTest);
+
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        MyComponentMock.Builder application(Application application);
+
+        MyComponentMock build();
+    }
 }
