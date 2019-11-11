@@ -3,14 +3,11 @@ package ch.amk.exercise1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.util.Log;
 
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NoCache;
-import com.google.common.io.CharStreams;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.assertion.ViewAssertions;
@@ -18,6 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
 import ch.amk.exercise1.utils.ExceptionBox;
 import ch.amk.exercise1.utils.MockSuccessResponse;
 
@@ -32,7 +30,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @RunWith(AndroidJUnit4.class)
@@ -52,13 +49,20 @@ public class PostActivityInstrumentedTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         this.ctx = InstrumentationRegistry.getInstrumentation().getContext();
+
+        App app = (App)InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
+/*
+        MyComponentMock component = DaggerMyComponent
+                .builder()
+                .application(app)
+                .build();
+        component.inject(app);
+ */
+//        app.setComponent(component);
     }
 
     @Test
     public void fetchPost() throws VolleyError, InterruptedException, IOException {
-        Intent intent = new Intent();
-        this.activityRule.launchActivity(intent);
-
         RequestQueue requestQueue = new RequestQueue(new NoCache(), mockNetwork, 1, new ImmediateResponseDelivery());
         PostActivity activity = this.activityRule.getActivity();
 
@@ -66,21 +70,22 @@ public class PostActivityInstrumentedTest {
 
         requestQueue.start();
 
-        activity.setRequestQueue(requestQueue);
-
         Mockito
                 .when(mockNetwork.performRequest(ArgumentMatchers.any()))
-                .then(invocation -> new MockSuccessResponse(this.ctx, "test.json"));
+                .then(invocation -> new MockSuccessResponse(this.ctx, "fetchPostMock.json"));
 
-        activity.getRequestQueue().addRequestFinishedListener(r -> {
+        requestQueue.addRequestFinishedListener(r -> {
             requestDone.set(true);
         });
 
-        activity.fetchPost(activity.ENDPOINT);
+        Intent intent = new Intent();
+        this.activityRule.launchActivity(intent);
 
         Awaitility.await().untilTrue(requestDone);
 
         // check if ExceptionBox is showing
         Espresso.onView(ViewMatchers.withText(ExceptionBox.TITLE)).check(ViewAssertions.doesNotExist());
+
+        Thread.sleep(5000);
     }
 }

@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import ch.amk.exercise1.modules.Main;
+import dagger.Component;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button activityButton;

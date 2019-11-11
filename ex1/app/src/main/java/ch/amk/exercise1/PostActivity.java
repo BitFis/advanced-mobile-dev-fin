@@ -17,20 +17,27 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import javax.inject.Inject;
+
+import ch.amk.exercise1.models.Post;
 import ch.amk.exercise1.utils.ExceptionBox;
 
 public class PostActivity extends Activity {
 
     public static final String ENDPOINT = "https://kylewbanks.com/rest/posts.json";
 
-    private RequestQueue requestQueue;
+    @Inject protected RequestQueue requestQueue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.post_activity);
 
-        requestQueue = Volley.newRequestQueue(this.getApplicationContext());
+        ((App)this.getApplication())
+                .getComponent()
+                .inject(PostActivity.this);
+
+        this.fetchPost(this.ENDPOINT);
     }
 
     public void setRequestQueue(RequestQueue requestQueue) {
