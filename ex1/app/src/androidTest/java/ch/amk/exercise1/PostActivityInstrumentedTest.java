@@ -73,7 +73,7 @@ public class PostActivityInstrumentedTest {
 
         Mockito
                 .when(mockNetwork.performRequest(ArgumentMatchers.any()))
-                .then(invocation -> new MockSuccessResponse("fetchPostMock.json"));
+                .then(invocation -> new MockSuccessResponse(this.ctx, "fetchPostMock.json"));
 
         requestQueue.addRequestFinishedListener(r -> {
             requestDone.set(true);

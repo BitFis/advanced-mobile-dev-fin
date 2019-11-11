@@ -16,6 +16,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -27,6 +33,8 @@ public class PostActivity extends Activity {
     public static final String ENDPOINT = "https://kylewbanks.com/rest/posts.json";
 
     @Inject protected RequestQueue requestQueue;
+
+    @Inject protected Gson gson;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,7 +56,7 @@ public class PostActivity extends Activity {
         return this.requestQueue;
     }
 
-    public void fetchPost(String endpoint) {
+    private void fetchPost(String endpoint) {
         StringRequest request = new StringRequest(
                 Request.Method.GET,
                 endpoint,
@@ -61,6 +69,8 @@ public class PostActivity extends Activity {
 
     private final Response.Listener<String> onPostLoaded = (String response) -> {
         Log.i("PostActivity", response);
+
+        List<Post> posts = Arrays.asList(gson.fromJson(response, Post[].class));
     };
     private final Response.ErrorListener onError = (VolleyError error) -> {
         Log.e("PostActivity", error.toString());

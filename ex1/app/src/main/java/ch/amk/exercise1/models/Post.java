@@ -7,14 +7,18 @@ import java.util.Date;
 final public class Post {
 
     @SerializedName("id")
-    long ID;
+    public long ID;
 
     @SerializedName("date")
-    Date dateCreated;
+    public Date DateCreated;
 
-    String title;
-    String author;
-    String url;
-    String body;
+    @SerializedName("title")
+    public String Title;
+    @SerializedName("author")
+    public String Author;
+    @SerializedName("url")
+    public String Url;
+    @SerializedName("body")
+    public String Body;
 
 }

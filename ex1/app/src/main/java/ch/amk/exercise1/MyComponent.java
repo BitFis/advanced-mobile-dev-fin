@@ -5,11 +5,15 @@ import android.app.Application;
 import javax.inject.Singleton;
 
 import ch.amk.exercise1.PostActivity;
+import ch.amk.exercise1.modules.Gson;
 import ch.amk.exercise1.modules.Main;
 import dagger.BindsInstance;
 import dagger.Component;
 
-@Component(modules = Main.class)
+@Component(modules = {
+        Main.class,
+        Gson.class
+})
 public interface MyComponent {
     void inject(PostActivity postActivity);
     void inject(App app);

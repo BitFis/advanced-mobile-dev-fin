@@ -4,12 +4,16 @@ import android.app.Application;
 
 import javax.inject.Singleton;
 
+import ch.amk.exercise1.modules.Gson;
 import ch.amk.exercise1.modules.MainMock;
 import dagger.BindsInstance;
 import dagger.Component;
 
 @Singleton
-@Component(modules = MainMock.class)
+@Component(modules = {
+        MainMock.class,
+        Gson.class
+})
 public interface MyComponentMock extends MyComponent {
     void inject(PostActivityInstrumentedTest postActivityInstrumentedTest);
 
