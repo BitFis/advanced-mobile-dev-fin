@@ -1,12 +1,8 @@
 package ch.amk.exercise1;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.PopupWindow;
-import android.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 
@@ -15,11 +11,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +39,7 @@ public class PostActivity extends Activity {
                 .inject(PostActivity.this);
 
         this.fetchPost(this.ENDPOINT);
+
     }
 
     public void setRequestQueue(RequestQueue requestQueue) {
@@ -77,5 +71,4 @@ public class PostActivity extends Activity {
 
         new ExceptionBox(error).show(this);
     };
-
 }
