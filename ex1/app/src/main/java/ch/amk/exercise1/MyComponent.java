@@ -15,8 +15,10 @@ import dagger.Component;
         Gson.class
 })
 public interface MyComponent {
-    void inject(PostActivity postActivity);
     void inject(App app);
+
+    void inject(PostActivity postActivity);
+    void inject(ScrollingActivity scrollingActivity);
 
     @Component.Builder
     interface Builder {
