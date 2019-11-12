@@ -95,7 +95,7 @@ public class PostActivity extends AppCompatActivity implements ItemFragment.OnLi
         new ExceptionBox(error).show(this);
     };
 
-    @Override 
+    @Override
     public void onListFragmentInteraction(Post item) {
         Intent intent = new Intent(this, PostItemActivity.class);
         intent.putExtra(PostItemActivity.POST_ATTRIBUTE, (Parcelable) item);
