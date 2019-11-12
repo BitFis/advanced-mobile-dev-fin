@@ -11,6 +11,18 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    sourceSets {
+        main {
+            res.srcDirs = [
+                'src/main/res/layouts/misc',
+                'src/main/res/layouts/spinner',
+                'src/main/res/layouts',
+                'src/main/res'
+            ]
+        }
+    }
+
     testOptions {
         unitTests.includeAndroidResources = true
         unitTests.returnDefaultValues = true

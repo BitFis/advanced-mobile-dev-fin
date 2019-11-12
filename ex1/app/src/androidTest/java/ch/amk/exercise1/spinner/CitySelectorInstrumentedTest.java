@@ -1,11 +1,7 @@
-package ch.amk.exercise1;
+package ch.amk.exercise1.spinner;
 
 import android.content.Context;
 import android.content.Intent;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,18 +9,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 
-@RunWith(AndroidJUnit4.class)
-public class ItemListActivityTest {
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+import ch.amk.exercise1.PostActivity;
 
-    private Context ctx;
+@RunWith(AndroidJUnit4.class)
+public class CitySelectorInstrumentedTest {
 
     @Rule
-    public ActivityTestRule<ScrollingActivity> activityRule = new ActivityTestRule<>(
-            ScrollingActivity.class,
+    public ActivityTestRule<CitySelectorActivity> activityRule = new ActivityTestRule<>(
+            CitySelectorActivity.class,
             true,     // initialTouchMode
             false);   // launchActivity. False to customize the intent
 
-
+    private Context ctx;
+ 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -32,9 +32,9 @@ public class ItemListActivityTest {
     }
 
     @Test
-    public void testItemlist() throws InterruptedException {
+    public void testCitySelectorSpinner() {
         Intent intent = new Intent();
         this.activityRule.launchActivity(intent);
-    }
 
+    }
 }

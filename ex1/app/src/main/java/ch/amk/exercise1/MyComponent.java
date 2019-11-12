@@ -18,7 +18,6 @@ public interface MyComponent {
     void inject(App app);
 
     void inject(PostActivity postActivity);
-    void inject(ScrollingActivity scrollingActivity);
 
     @Component.Builder
     interface Builder {
