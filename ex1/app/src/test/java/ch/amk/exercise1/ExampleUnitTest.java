@@ -13,12 +13,10 @@ import static org.junit.Assert.*;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class ExampleUnitTest extends AndroidLogMock {
+public class ExampleUnitTest {
     @Test @Ignore
     public void testBasicRequest() {
         PostActivity activity = new PostActivity();
-
-        activity.fetchPost(activity.ENDPOINT);
     }
 
     @Test
