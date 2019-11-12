@@ -12,6 +12,8 @@ import java.util.List;
 
 public class CitySelectorActivity extends AppCompatActivity {
 
+    private static final String WHEATER_API_KEY = "01f4ce4de22786346799bfec88c18db8";
+
     private Spinner spinner;
 
     @Override
@@ -26,7 +28,7 @@ public class CitySelectorActivity extends AppCompatActivity {
 
     private void initSpinner(Spinner spinner) {
         List<String> list = new ArrayList<String>();
-        list.add("list 1");
+        list.add("London, uk");
         list.add("list 2");
         list.add("list 3");
         list.add("list 1");
