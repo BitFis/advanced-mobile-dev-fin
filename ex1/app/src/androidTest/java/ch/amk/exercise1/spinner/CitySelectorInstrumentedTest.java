@@ -24,7 +24,7 @@ public class CitySelectorInstrumentedTest {
             false);   // launchActivity. False to customize the intent
 
     private Context ctx;
- 
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
