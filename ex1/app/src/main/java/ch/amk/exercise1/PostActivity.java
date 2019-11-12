@@ -1,7 +1,9 @@
 package ch.amk.exercise1;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Adapter;
 
@@ -93,8 +95,10 @@ public class PostActivity extends AppCompatActivity implements ItemFragment.OnLi
         new ExceptionBox(error).show(this);
     };
 
-    @Override
+    @Override 
     public void onListFragmentInteraction(Post item) {
-
+        Intent intent = new Intent(this, PostItemActivity.class);
+        intent.putExtra(PostItemActivity.POST_ATTRIBUTE, (Parcelable) item);
+        this.startActivity(intent);
     }
 }

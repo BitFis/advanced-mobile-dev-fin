@@ -1,14 +1,12 @@
 package ch.amk.exercise1;
 
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.NoCache;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.assertion.ViewAssertions;
