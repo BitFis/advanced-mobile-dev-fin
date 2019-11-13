@@ -31,10 +31,4 @@ public class MainMock {
     static RequestQueue provideRequestQueue(Network network) {
         return new RequestQueueMockBuilder().network(network).create();
     }
-
-    @Singleton
-    @Provides
-    static OpenWeatherManager provideOpenWeatherManager() {
-        return Mockito.mock(OpenWeatherManager.class);
-    }
 }

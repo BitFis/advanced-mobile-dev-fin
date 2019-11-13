@@ -1,13 +1,18 @@
 package ch.amk.exercise1.spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.transition.Visibility;
 import ch.amk.exercise1.App;
 import ch.amk.exercise1.PostActivity;
 import ch.amk.exercise1.R;
+import ch.amk.exercise1.models.openweather.OpenWeather;
 import ch.amk.exercise1.service.OpenWeatherManager;
+import ch.amk.exercise1.utils.ExceptionBox;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.google.common.collect.Lists;
@@ -21,8 +26,6 @@ import javax.inject.Inject;
 
 public class CitySelectorActivity extends AppCompatActivity {
 
-    private static final String WHEATER_API_KEY = "01f4ce4de22786346799bfec88c18db8";
-
     private static final List<String> CITY_LIST = Arrays.asList(
             "Rovaniemi, fi",
             "London, en",
@@ -33,6 +36,8 @@ public class CitySelectorActivity extends AppCompatActivity {
 
     private Spinner spinner;
 
+    private ProgressBar progressBar;
+
     @Inject
     OpenWeatherManager openWeatherManager;
 
@@ -42,6 +47,7 @@ public class CitySelectorActivity extends AppCompatActivity {
         this.setContentView(R.layout.activity_city_selector);
 
         this.spinner = (Spinner) this.findViewById(R.id.city_spinner);
+        this.progressBar = (ProgressBar) this.findViewById(R.id.city_loader_bar);
 
         ((App)this.getApplication())
                 .getComponent()
@@ -58,4 +64,33 @@ public class CitySelectorActivity extends AppCompatActivity {
         dataAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
     }
+
+    public void loadCity(String city) {
+        this.showUiElement(this.progressBar);
+
+        this.openWeatherManager.get(city, response -> {
+            this.showCityInformation(response);
+
+            //this.hideUiElement(this.progressBar);
+        }, error -> {
+            new ExceptionBox(error).show(this);
+        });
+    }
+
+    private void toggleHiddenUiElement(final android.view.View uiElement, int visibility) {
+        this.runOnUiThread(() -> uiElement.setVisibility(visibility));
+    }
+
+    private void showUiElement(final View uiElement) {
+        this.toggleHiddenUiElement(uiElement, View.VISIBLE);
+    }
+
+    private void hideUiElement(final View uiElement) {
+        this.toggleHiddenUiElement(uiElement, View.INVISIBLE);
+    }
+
+    private void showCityInformation(OpenWeather information) {
+        this.showUiElement(this.findViewById(R.id.data_view));
+    }
+
 }

@@ -3,6 +3,7 @@ package ch.amk.exercise1;
 import android.util.Log;
 
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -18,7 +19,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class AndroidLogMock {
+public abstract class AndroidLogMock {
 
     private static HashMap<Integer, String> LOG_LEVELS = new HashMap<Integer, String>(){{
         put(Log.VERBOSE, "VERBOSE");

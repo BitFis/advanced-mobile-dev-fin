@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import ch.amk.exercise1.modules.Gson;
 import ch.amk.exercise1.modules.MainMock;
+import ch.amk.exercise1.spinner.CitySelectorInstrumentedTest;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -16,6 +17,7 @@ import dagger.Component;
 })
 public interface MyComponentMock extends MyComponent {
     void inject(PostActivityInstrumentedTest postActivityInstrumentedTest);
+    void inject(CitySelectorInstrumentedTest citySelectorInstrumentedTest);
 
     @Component.Builder
     interface Builder {
