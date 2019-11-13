@@ -12,6 +12,8 @@ import org.mockito.Mockito;
 import javax.inject.Singleton;
 
 import ch.amk.exercise1.ImmediateResponseDelivery;
+import ch.amk.exercise1.service.OpenWeatherManager;
+import ch.amk.exercise1.utils.RequestQueueMockBuilder;
 import dagger.Module;
 import dagger.Provides;
 
@@ -27,10 +29,12 @@ public class MainMock {
     @Singleton
     @Provides
     static RequestQueue provideRequestQueue(Network network) {
-        RequestQueue requestQueue = new RequestQueue(new NoCache(), network, 1, new ImmediateResponseDelivery());
-        requestQueue.start();
-
-        return requestQueue;
+        return new RequestQueueMockBuilder().network(network).create();
     }
 
+    @Singleton
+    @Provides
+    static OpenWeatherManager provideOpenWeatherManager() {
+        return Mockito.mock(OpenWeatherManager.class);
+    }
 }

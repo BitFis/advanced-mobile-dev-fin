@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
+    String sharedTestDir = 'src/sharedTest/java'
+
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -20,6 +22,12 @@ android {
                 'src/main/res/layouts',
                 'src/main/res'
             ]
+        }
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
         }
     }
 
