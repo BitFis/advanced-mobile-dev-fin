@@ -36,7 +36,6 @@ public class MapsActivityInstrumentedTest {
     public void testMapsZoom() {
         Intent intent = new Intent();
         this.activityRule.launchActivity(intent);
-
     }
 
 }

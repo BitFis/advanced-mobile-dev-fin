@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Exercise 2</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Map</string>\
+    <string name="checkbox_zoom">Zoom</string>
 </resources>
