@@ -9,6 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 
 import org.awaitility.Awaitility;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
+import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -32,6 +34,11 @@ import ch.amk.exercise1.PostActivity;
 import ch.amk.exercise1.R;
 import ch.amk.exercise1.models.openweather.OpenWeather;
 import ch.amk.exercise1.utils.MockSuccessResponse;
+
+import static org.hamcrest.CoreMatchers.*;
+import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 
 @RunWith(AndroidJUnit4.class)
 public class CitySelectorInstrumentedTest {
@@ -73,7 +80,13 @@ public class CitySelectorInstrumentedTest {
                 .when(mockNetwork.performRequest(ArgumentMatchers.any()))
                 .thenAnswer(invocation -> new MockSuccessResponse(this.ctx, "openweather_city_rovaniemi.json"));
 
-        this.activityRule.getActivity().loadCity("rovaniemi,fi");
+        // select spinner element
+        int spinnerId = R.id.city_spinner;
+        String cityToSelect = "Rovaniemi, fi";
+
+        onView(withId(spinnerId)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(cityToSelect))).perform(click());
+        onView(withId(spinnerId)).check(ViewAssertions.matches(withSpinnerText(containsString(cityToSelect))));
 
         Awaitility.await().until(() -> {
             AtomicBoolean value = new AtomicBoolean();
@@ -86,6 +99,8 @@ public class CitySelectorInstrumentedTest {
             }
             return value.get();
         });
+
+        onView(withId(R.id.action_open_detail_weather)).perform(click());
     }
 
     @Test

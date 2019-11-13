@@ -10,10 +10,13 @@ import ch.amk.exercise1.service.OpenWeatherManager;
 import ch.amk.exercise1.utils.ExceptionBox;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 
@@ -27,6 +30,7 @@ import javax.inject.Inject;
 public class CitySelectorActivity extends AppCompatActivity {
 
     private static final List<String> CITY_LIST = Arrays.asList(
+            "No City Selected",
             "Rovaniemi, fi",
             "London, en",
             "Zug, ch",
@@ -37,9 +41,28 @@ public class CitySelectorActivity extends AppCompatActivity {
     private Spinner spinner;
 
     private ProgressBar progressBar;
+    private OpenWeather selectedWeather;
+    private TextView textTemp;
+    private View resultView;
 
     @Inject
     OpenWeatherManager openWeatherManager;
+
+    private AdapterView.OnItemSelectedListener onSpinnerChange = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if(position <= 0) {
+                CitySelectorActivity.this.hideUiElement(CitySelectorActivity.this.resultView);
+            } else {
+                CitySelectorActivity.this.loadCity(CitySelectorActivity.CITY_LIST.get(position));
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            CitySelectorActivity.this.hideUiElement(CitySelectorActivity.this.resultView);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +71,10 @@ public class CitySelectorActivity extends AppCompatActivity {
 
         this.spinner = (Spinner) this.findViewById(R.id.city_spinner);
         this.progressBar = (ProgressBar) this.findViewById(R.id.city_loader_bar);
+        this.textTemp = (TextView)this.findViewById(R.id.data_temp);
+        this.resultView = this.findViewById(R.id.data_view);
+
+        this.spinner.setOnItemSelectedListener(this.onSpinnerChange);
 
         ((App)this.getApplication())
                 .getComponent()
@@ -65,13 +92,15 @@ public class CitySelectorActivity extends AppCompatActivity {
         spinner.setAdapter(dataAdapter);
     }
 
-    public void loadCity(String city) {
+    private void loadCity(String city) {
         this.showUiElement(this.progressBar);
+        this.hideUiElement(this.findViewById(R.id.info_choose_city));
 
         this.openWeatherManager.get(city, response -> {
-            this.showCityInformation(response);
+            this.selectedWeather = response;
+            this.showCityInformation(this.selectedWeather);
 
-            //this.hideUiElement(this.progressBar);
+            this.hideUiElement(this.progressBar);
         }, error -> {
             new ExceptionBox(error).show(this);
         });
@@ -90,7 +119,9 @@ public class CitySelectorActivity extends AppCompatActivity {
     }
 
     private void showCityInformation(OpenWeather information) {
-        this.showUiElement(this.findViewById(R.id.data_view));
+        this.runOnUiThread(() -> this.textTemp.setText(information.getMain().getTemp() + " ℃"));
+
+        this.showUiElement(this.resultView);
     }
 
 }

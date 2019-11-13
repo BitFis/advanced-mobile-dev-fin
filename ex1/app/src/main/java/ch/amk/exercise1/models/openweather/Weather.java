@@ -1,10 +1,15 @@
 
 package ch.amk.exercise1.models.openweather;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Weather {
+public class Weather implements Parcelable
+{
 
     @SerializedName("id")
     @Expose
@@ -18,6 +23,51 @@ public class Weather {
     @SerializedName("icon")
     @Expose
     private String icon = "03d";
+    public final static Parcelable.Creator<Weather> CREATOR = new Creator<Weather>() {
+
+
+        @SuppressWarnings({
+            "unchecked"
+        })
+        public Weather createFromParcel(Parcel in) {
+            return new Weather(in);
+        }
+
+        public Weather[] newArray(int size) {
+            return (new Weather[size]);
+        }
+
+    }
+    ;
+
+    protected Weather(Parcel in) {
+        this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.main = ((String) in.readValue((String.class.getClassLoader())));
+        this.description = ((String) in.readValue((String.class.getClassLoader())));
+        this.icon = ((String) in.readValue((String.class.getClassLoader())));
+    }
+
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public Weather() {
+    }
+
+    /**
+     * 
+     * @param icon
+     * @param description
+     * @param main
+     * @param id
+     */
+    public Weather(Integer id, String main, String description, String icon) {
+        super();
+        this.id = id;
+        this.main = main;
+        this.description = description;
+        this.icon = icon;
+    }
 
     public Integer getId() {
         return id;
@@ -69,6 +119,22 @@ public class Weather {
     public Weather withIcon(String icon) {
         this.icon = icon;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("id", id).append("main", main).append("description", description).append("icon", icon).toString();
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(id);
+        dest.writeValue(main);
+        dest.writeValue(description);
+        dest.writeValue(icon);
+    }
+
+    public int describeContents() {
+        return  0;
     }
 
 }

@@ -2,10 +2,15 @@
 package ch.amk.exercise1.models.openweather;
 
 import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class OpenWeather {
+public class OpenWeather implements Parcelable
+{
 
     /**
      * 
@@ -95,6 +100,72 @@ public class OpenWeather {
     @SerializedName("cod")
     @Expose
     private Integer cod = 200;
+    public final static Parcelable.Creator<OpenWeather> CREATOR = new Creator<OpenWeather>() {
+
+
+        @SuppressWarnings({
+            "unchecked"
+        })
+        public OpenWeather createFromParcel(Parcel in) {
+            return new OpenWeather(in);
+        }
+
+        public OpenWeather[] newArray(int size) {
+            return (new OpenWeather[size]);
+        }
+
+    }
+    ;
+
+    protected OpenWeather(Parcel in) {
+        this.coord = ((Coord) in.readValue((Coord.class.getClassLoader())));
+        in.readList(this.weather, (ch.amk.exercise1.models.openweather.Weather.class.getClassLoader()));
+        this.base = ((String) in.readValue((String.class.getClassLoader())));
+        this.main = ((Main) in.readValue((Main.class.getClassLoader())));
+        this.wind = ((Wind) in.readValue((Wind.class.getClassLoader())));
+        this.clouds = ((Clouds) in.readValue((Clouds.class.getClassLoader())));
+        this.dt = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.sys = ((Sys) in.readValue((Sys.class.getClassLoader())));
+        this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.name = ((String) in.readValue((String.class.getClassLoader())));
+        this.cod = ((Integer) in.readValue((Integer.class.getClassLoader())));
+    }
+
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public OpenWeather() {
+    }
+
+    /**
+     * 
+     * @param dt
+     * @param coord
+     * @param weather
+     * @param name
+     * @param cod
+     * @param main
+     * @param clouds
+     * @param id
+     * @param sys
+     * @param base
+     * @param wind
+     */
+    public OpenWeather(Coord coord, List<Weather> weather, String base, Main main, Wind wind, Clouds clouds, Integer dt, Sys sys, Integer id, String name, Integer cod) {
+        super();
+        this.coord = coord;
+        this.weather = weather;
+        this.base = base;
+        this.main = main;
+        this.wind = wind;
+        this.clouds = clouds;
+        this.dt = dt;
+        this.sys = sys;
+        this.id = id;
+        this.name = name;
+        this.cod = cod;
+    }
 
     /**
      * 
@@ -347,6 +418,29 @@ public class OpenWeather {
     public OpenWeather withCod(Integer cod) {
         this.cod = cod;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("coord", coord).append("weather", weather).append("base", base).append("main", main).append("wind", wind).append("clouds", clouds).append("dt", dt).append("sys", sys).append("id", id).append("name", name).append("cod", cod).toString();
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(coord);
+        dest.writeList(weather);
+        dest.writeValue(base);
+        dest.writeValue(main);
+        dest.writeValue(wind);
+        dest.writeValue(clouds);
+        dest.writeValue(dt);
+        dest.writeValue(sys);
+        dest.writeValue(id);
+        dest.writeValue(name);
+        dest.writeValue(cod);
+    }
+
+    public int describeContents() {
+        return  0;
     }
 
 }
