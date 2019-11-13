@@ -4,26 +4,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.transition.Visibility;
 import ch.amk.exercise1.App;
 import ch.amk.exercise1.PostActivity;
+import ch.amk.exercise1.PostItemActivity;
 import ch.amk.exercise1.R;
 import ch.amk.exercise1.models.openweather.OpenWeather;
 import ch.amk.exercise1.service.OpenWeatherManager;
 import ch.amk.exercise1.utils.ExceptionBox;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 
+import java.lang.reflect.Executable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -38,12 +44,13 @@ public class CitySelectorActivity extends AppCompatActivity {
             "Bern, ch"
     );
 
-    private Spinner spinner;
-
-    private ProgressBar progressBar;
     private OpenWeather selectedWeather;
+
+    private Spinner spinner;
+    private ProgressBar progressBar;
     private TextView textTemp;
     private View resultView;
+    private Button openDetailButton;
 
     @Inject
     OpenWeatherManager openWeatherManager;
@@ -64,17 +71,27 @@ public class CitySelectorActivity extends AppCompatActivity {
         }
     };
 
+    private View.OnClickListener listenerOpenDetailActiviy = v -> {
+        Intent intent = new Intent(this, OpenWeatherDetailActivity.class);
+
+        intent.putExtra(OpenWeatherDetailActivity.OPENWEATHER_PARCEL_KEY, (Parcelable) this.selectedWeather);
+
+        this.startActivity(intent);
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_city_selector);
 
-        this.spinner = (Spinner) this.findViewById(R.id.city_spinner);
-        this.progressBar = (ProgressBar) this.findViewById(R.id.city_loader_bar);
-        this.textTemp = (TextView)this.findViewById(R.id.data_temp);
+        this.spinner = this.findViewById(R.id.city_spinner);
+        this.progressBar = this.findViewById(R.id.city_loader_bar);
+        this.textTemp = this.findViewById(R.id.data_temp);
         this.resultView = this.findViewById(R.id.data_view);
+        this.openDetailButton = this.findViewById(R.id.action_open_detail_weather);
 
         this.spinner.setOnItemSelectedListener(this.onSpinnerChange);
+        this.openDetailButton.setOnClickListener(this.listenerOpenDetailActiviy);
 
         ((App)this.getApplication())
                 .getComponent()

@@ -1,6 +1,7 @@
 
 package ch.amk.exercise1.models.openweather;
 
+import java.util.ArrayList;
 import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -27,7 +28,7 @@ public class OpenWeather implements Parcelable
      */
     @SerializedName("weather")
     @Expose
-    private List<Weather> weather = null;
+    private List<Weather> weather = new ArrayList<>();
     /**
      * 
      * (Required)

@@ -17,10 +17,10 @@ android {
     sourceSets {
         main {
             res.srcDirs = [
-                'src/main/res/layouts/misc',
-                'src/main/res/layouts/spinner',
-                'src/main/res/layouts',
-                'src/main/res'
+                    'src/main/res/layouts/misc',
+                    'src/main/res/layouts/spinner',
+                    'src/main/res/layouts',
+                    'src/main/res'
             ]
         }
         test {

@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".spinner.CitySelectorActivity"></activity>
+        <activity android:name=".spinner.OpenWeatherDetailActivity"></activity>
+        <activity android:name=".spinner.CitySelectorActivity" />
         <activity android:name=".PostItemActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".MainActivity">

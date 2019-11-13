@@ -88,6 +88,7 @@ public class CitySelectorInstrumentedTest {
         onData(allOf(is(instanceOf(String.class)), is(cityToSelect))).perform(click());
         onView(withId(spinnerId)).check(ViewAssertions.matches(withSpinnerText(containsString(cityToSelect))));
 
+        // wait till the view is available
         Awaitility.await().until(() -> {
             AtomicBoolean value = new AtomicBoolean();
             try {
@@ -101,13 +102,7 @@ public class CitySelectorInstrumentedTest {
         });
 
         onView(withId(R.id.action_open_detail_weather)).perform(click());
-    }
 
-    @Test
-    public void testCitySelectorSpinner() {
-        Intent intent = new Intent();
-        this.activityRule.launchActivity(intent);
-
-        // todo add selection tests
+        onView(withId(R.id.detail_city_name)).check(ViewAssertions.matches(withText("Rovaniemi")));
     }
 }
