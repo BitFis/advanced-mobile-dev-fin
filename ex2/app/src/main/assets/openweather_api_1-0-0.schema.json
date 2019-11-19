@@ -147,7 +147,11 @@
     "cod": {
       "id": "http://api.openweathermap.org/cod",
       "type": "integer"
+    },
+    "timezone": {
+      "id": "http://api.openweathermap.org/timezone",
+      "type": "integer"
     }
   },
-  "required": ["coord", "weather", "base", "main", "wind", "clouds", "dt", "sys", "id", "name", "cod"]
+  "required": ["coord", "weather", "base", "main", "wind", "clouds", "dt", "sys", "id", "name", "cod", "timezone"]
 }

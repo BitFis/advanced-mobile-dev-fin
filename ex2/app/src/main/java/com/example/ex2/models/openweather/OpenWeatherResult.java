@@ -102,8 +102,15 @@ public class OpenWeatherResult implements Parcelable
     @SerializedName("cod")
     @Expose
     private Integer cod;
+    /**
+     *
+     * (Required)
+     *
+     */
+    @SerializedName("timezone")
+    @Expose
+    private Integer timezone;
     public final static Parcelable.Creator<OpenWeatherResult> CREATOR = new Creator<OpenWeatherResult>() {
-
 
         @SuppressWarnings({
             "unchecked"
@@ -131,6 +138,7 @@ public class OpenWeatherResult implements Parcelable
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
         this.cod = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.timezone = ((Integer) in.readValue((Integer.class.getClassLoader())));
     }
 
     public OpenWeatherResult() {
@@ -389,14 +397,39 @@ public class OpenWeatherResult implements Parcelable
         return this;
     }
 
+
+    /**
+     *
+     * (Required)
+     *
+     */
+    public Integer getTimezone() {
+        return timezone;
+    }
+
+    /**
+     *
+     * (Required)
+     *
+     */
+    public void setTimezone(Integer timezone) {
+        this.timezone = timezone;
+    }
+
+    public OpenWeatherResult withTimezone(Integer timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("coord", coord).append("weather", weather).append("base", base).append("main", main).append("wind", wind).append("clouds", clouds).append("dt", dt).append("sys", sys).append("id", id).append("name", name).append("cod", cod).toString();
+        return new ToStringBuilder(this).append("coord", coord).append("weather", weather).append("base", base).append("main", main).append("wind", wind).append("clouds", clouds).append("dt", dt).append("sys", sys).append("id", id).append("name", name).append("cod", cod).append("timezone", timezone).toString();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(dt).append(coord).append(weather).append(name).append(cod).append(main).append(clouds).append(id).append(sys).append(base).append(wind).toHashCode();
+        return new HashCodeBuilder().append(timezone).append(dt).append(coord).append(weather).append(name).append(cod).append(main).append(clouds).append(id).append(sys).append(base).append(wind).toHashCode();
     }
 
     @Override
@@ -408,7 +441,7 @@ public class OpenWeatherResult implements Parcelable
             return false;
         }
         OpenWeatherResult rhs = ((OpenWeatherResult) other);
-        return new EqualsBuilder().append(dt, rhs.dt).append(coord, rhs.coord).append(weather, rhs.weather).append(name, rhs.name).append(cod, rhs.cod).append(main, rhs.main).append(clouds, rhs.clouds).append(id, rhs.id).append(sys, rhs.sys).append(base, rhs.base).append(wind, rhs.wind).isEquals();
+        return new EqualsBuilder().append(timezone, rhs.timezone).append(dt, rhs.dt).append(coord, rhs.coord).append(weather, rhs.weather).append(name, rhs.name).append(cod, rhs.cod).append(main, rhs.main).append(clouds, rhs.clouds).append(id, rhs.id).append(sys, rhs.sys).append(base, rhs.base).append(wind, rhs.wind).isEquals();
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -423,6 +456,7 @@ public class OpenWeatherResult implements Parcelable
         dest.writeValue(id);
         dest.writeValue(name);
         dest.writeValue(cod);
+        dest.writeValue(timezone);
     }
 
     public int describeContents() {

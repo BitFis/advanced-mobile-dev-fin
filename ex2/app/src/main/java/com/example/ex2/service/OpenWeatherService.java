@@ -26,10 +26,6 @@ public class OpenWeatherService {
         this.requestQueue = requestQueue;
     }
 
-    private Response.Listener<String> processResponse = response -> {
-        OpenWeatherResult result = gson.fromJson(response.getBytes().toString(), OpenWeatherResult.class);
-    };
-
     public void getLatLng(LatLng latLng, Response.Listener<OpenWeatherResult> success, Response.ErrorListener errorListener) {
         OpenWeatherUrlSchema openWeatherUrlSchema = new OpenWeatherUrlSchema()
                 .appid(APPID)
@@ -40,7 +36,7 @@ public class OpenWeatherService {
                 openWeatherUrlSchema.toString(),
                 response -> {
                     try {
-                        OpenWeatherService.this.processResponse.onResponse(response);
+                        success.onResponse(gson.fromJson(response, OpenWeatherResult.class));
                     } catch (RuntimeException e) {
                         errorListener.onErrorResponse(new VolleyError("Parsing error occured", e));
                     }
