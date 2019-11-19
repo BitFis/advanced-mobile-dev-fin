@@ -9,14 +9,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.ex2.R;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 public class WeatherPopupAdapter implements GoogleMap.InfoWindowAdapter {
 
     private Context context;
 
-    public WeatherPopupAdapter(Context context) {
+     public WeatherPopupAdapter(Context context) {
         this.context = context;
     }
 
@@ -28,7 +30,6 @@ public class WeatherPopupAdapter implements GoogleMap.InfoWindowAdapter {
     private LinearLayout addEntry(String label, String content) {
         LinearLayout ll = new LinearLayout(this.context);
         ll.setOrientation(LinearLayout.HORIZONTAL);
-
         TextView l = new TextView(this.context);
         l.setText("label");
         l.setTextColor(Color.BLACK);
@@ -44,6 +45,13 @@ public class WeatherPopupAdapter implements GoogleMap.InfoWindowAdapter {
         return ll;
     }
 
+    /**
+     * The markers lat/long will be used to get the weather data
+     * for the location
+     *
+     * @param marker Google marker
+     * @return View with weather data
+     */
     @Override
     public View getInfoContents(Marker marker) {
         LinearLayout info = new LinearLayout(this.context);
@@ -58,6 +66,8 @@ public class WeatherPopupAdapter implements GoogleMap.InfoWindowAdapter {
         TextView snippet = new TextView(this.context);
         snippet.setTextColor(Color.GRAY);
         snippet.setText(marker.getSnippet());
+
+        LatLng latLng = marker.getPosition();
 
         info.addView(title);
         info.addView(this.addEntry("Label", "Value"));

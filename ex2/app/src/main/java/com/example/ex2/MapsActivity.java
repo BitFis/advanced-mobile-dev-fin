@@ -1,21 +1,15 @@
 package com.example.ex2;
 
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
-import com.example.ex2.ui.LabelTextFragment;
+import com.android.volley.Network;
+import com.example.ex2.service.OpenWeatherService;
 import com.example.ex2.ui.WeatherPopupAdapter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,10 +21,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-
-import org.w3c.dom.Text;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
+
+import javax.inject.Inject;
 
 public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
@@ -55,10 +50,21 @@ public class MapsActivity extends FragmentActivity implements
         put(R.id.radio_maptype_hybrid, GoogleMap.MAP_TYPE_HYBRID);
     }});
 
+    @Inject
+    Gson gson;
+
+    @Inject
+    OpenWeatherService openWeatherService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        ((CoreApplication)this.getApplication()).getComponent().inject(this);
+
+        Log.i("MapsActivity", "Received " + this.openWeatherService.get(null));
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

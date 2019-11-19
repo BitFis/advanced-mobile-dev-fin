@@ -1,4 +1,4 @@
-package ch.amk.exercise1.utils;
+package ch.amk.exercise2.utils;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -8,7 +8,7 @@ import com.android.volley.toolbox.NoCache;
 
 import java.util.Objects;
 
-import ch.amk.exercise1.ImmediateResponseDelivery;
+import ch.amk.exercise2.ImmediateResponseDelivery;
 
 public class RequestQueueMockBuilder {
 

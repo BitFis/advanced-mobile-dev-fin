@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://api.openweathermap.org",
+  "type": "object",
+  "properties": {
+    "coord": {
+      "id": "http://api.openweathermap.org/coord",
+      "type": "object",
+      "properties": {
+        "lon": {
+          "id": "http://api.openweathermap.org/coord/lon",
+          "type": "number"
+        },
+        "lat": {
+          "id": "http://api.openweathermap.org/coord/lat",
+          "type": "number"
+        }
+      },
+      "required": ["lon", "lat"]
+    },
+    "weather": {
+      "id": "http://api.openweathermap.org/weather",
+      "type": "array",
+      "items": {
+        "id": "http://api.openweathermap.org/weather/0",
+        "type": "object",
+        "properties": {
+          "id": {
+            "id": "http://api.openweathermap.org/weather/0/id",
+            "type": "integer"
+          },
+          "main": {
+            "id": "http://api.openweathermap.org/weather/0/main",
+            "type": "string"
+          },
+          "description": {
+            "id": "http://api.openweathermap.org/weather/0/description",
+            "type": "string"
+          },
+          "icon": {
+            "id": "http://api.openweathermap.org/weather/0/icon",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "base": {
+      "id": "http://api.openweathermap.org/base",
+      "type": "string"
+    },
+    "main": {
+      "id": "http://api.openweathermap.org/main",
+      "type": "object",
+      "properties": {
+        "temp": {
+          "id": "http://api.openweathermap.org/main/temp",
+          "type": "number"
+        },
+        "pressure": {
+          "id": "http://api.openweathermap.org/main/pressure",
+          "type": "number"
+        },
+        "humidity": {
+          "id": "http://api.openweathermap.org/main/humidity",
+          "type": "integer"
+        },
+        "temp_min": {
+          "id": "http://api.openweathermap.org/main/temp_min",
+          "type": "number"
+        },
+        "temp_max": {
+          "id": "http://api.openweathermap.org/main/temp_max",
+          "type": "number"
+        }
+      }
+    },
+    "wind": {
+      "id": "http://api.openweathermap.org/wind",
+      "type": "object",
+      "properties": {
+        "speed": {
+          "id": "http://api.openweathermap.org/wind/speed",
+          "type": "number"
+        },
+        "deg": {
+          "id": "http://api.openweathermap.org/wind/deg",
+          "type": "integer"
+        },
+        "gust": {
+          "id": "http://api.openweathermap.org/wind/gust",
+          "type": "number"
+        }
+      }
+    },
+    "clouds": {
+      "id": "http://api.openweathermap.org/clouds",
+      "type": "object",
+      "properties": {
+        "all": {
+          "id": "http://api.openweathermap.org/clouds/all",
+          "type": "integer"
+        }
+      }
+    },
+    "dt": {
+      "id": "http://api.openweathermap.org/dt",
+      "type": "integer"
+    },
+    "sys": {
+      "id": "http://api.openweathermap.org/sys",
+      "type": "object",
+      "properties": {
+        "type": {
+          "id": "http://api.openweathermap.org/sys/type",
+          "type": "integer"
+        },
+        "id": {
+          "id": "http://api.openweathermap.org/sys/id",
+          "type": "integer"
+        },
+        "message": {
+          "id": "http://api.openweathermap.org/sys/message",
+          "type": "number"
+        },
+        "country": {
+          "id": "http://api.openweathermap.org/sys/country",
+          "type": "string"
+        },
+        "sunrise": {
+          "id": "http://api.openweathermap.org/sys/sunrise",
+          "type": "integer"
+        },
+        "sunset": {
+          "id": "http://api.openweathermap.org/sys/sunset",
+          "type": "integer"
+        }
+      }
+    },
+    "id": {
+      "id": "http://api.openweathermap.org/id",
+      "type": "integer"
+    },
+    "name": {
+      "id": "http://api.openweathermap.org/name",
+      "type": "string"
+    },
+    "cod": {
+      "id": "http://api.openweathermap.org/cod",
+      "type": "integer"
+    }
+  },
+  "required": ["coord", "weather", "base", "main", "wind", "clouds", "dt", "sys", "id", "name", "cod"]
+}

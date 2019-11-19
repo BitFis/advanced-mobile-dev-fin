@@ -1,4 +1,4 @@
-package ch.amk.exercise1.utils;
+package ch.amk.exercise2.utils;
 
 import android.content.Context;
 
@@ -6,14 +6,11 @@ import androidx.annotation.NonNull;
 
 import com.android.volley.NetworkResponse;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
 import com.google.common.io.Resources;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.Collections;
 
 public class MockSuccessResponse extends NetworkResponse {
     public MockSuccessResponse(@NonNull String message) {
@@ -34,6 +31,14 @@ public class MockSuccessResponse extends NetworkResponse {
 
     public MockSuccessResponse(@NonNull InputStream inputStream) throws IOException {
         super(ByteStreams.toByteArray(inputStream));
+    }
+
+    public static NetworkResponse fromResource(String file) throws IOException {
+        return new MockSuccessResponse(Resources.getResource(file));
+    }
+
+    public static NetworkResponse fromAssets(Context ctx, String file) throws IOException {
+        return new MockSuccessResponse(ctx, file);
     }
 
 }
