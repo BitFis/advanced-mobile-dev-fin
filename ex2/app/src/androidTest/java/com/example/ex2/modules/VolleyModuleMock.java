@@ -15,13 +15,13 @@ import static org.mockito.Mockito.mock;
 public class VolleyModuleMock {
     @Singleton
     @Provides
-    static Network provideNetwork() {
+    public static Network provideNetwork() {
         return mock(Network.class);
     }
 
     @Singleton
     @Provides
-    static RequestQueue provideRequestQueue() {
+    public static RequestQueue provideRequestQueue() {
         return new RequestQueueMockBuilder().network(mock(Network.class)).create();
     }
 }

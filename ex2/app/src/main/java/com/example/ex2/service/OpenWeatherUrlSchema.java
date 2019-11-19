@@ -42,7 +42,7 @@ public class OpenWeatherUrlSchema {
     @NonNull
     @Override
     public String toString() {
-        final Uri.Builder builder = new Uri.Builder()
+        Uri.Builder builder = new Uri.Builder()
                 .scheme("https")
                 .authority(OPENWEATHER_API_AUTHORITY)
                 .path(OPENWEATHER_API_PATH)

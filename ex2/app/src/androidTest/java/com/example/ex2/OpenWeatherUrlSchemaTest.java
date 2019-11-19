@@ -48,5 +48,4 @@ public class OpenWeatherUrlSchemaTest {
         assertEquals(latLng.latitude, parsed.getQueryParameter("lat"));
         assertEquals(latLng.longitude, parsed.getQueryParameter("lon"));
     }
-
 }

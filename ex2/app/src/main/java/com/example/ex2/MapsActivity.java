@@ -63,8 +63,6 @@ public class MapsActivity extends FragmentActivity implements
 
         ((CoreApplication)this.getApplication()).getComponent().inject(this);
 
-        Log.i("MapsActivity", "Received " + this.openWeatherService.get(null));
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

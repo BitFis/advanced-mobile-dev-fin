@@ -10,7 +10,7 @@ import dagger.Provides;
 public class GsonModule {
 
     @Provides
-    Gson provideGson() {
+    public Gson provideGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         return gsonBuilder.create();
