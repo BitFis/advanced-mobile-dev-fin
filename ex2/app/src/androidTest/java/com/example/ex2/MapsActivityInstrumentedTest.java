@@ -3,11 +3,14 @@ package com.example.ex2;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.PatternMatcher;
 
+import org.apache.commons.lang3.RegExUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.MockitoAnnotations;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -19,11 +22,15 @@ import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
 import com.android.volley.Network;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.example.ex2.service.OpenWeatherService;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
+import javax.annotation.RegEx;
 import javax.inject.Inject;
 
 import ch.amk.exercise2.utils.MockSuccessResponse;
@@ -31,7 +38,11 @@ import ch.amk.exercise2.utils.MockSuccessResponse;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.matchesPattern;
+import static org.hamcrest.Matchers.matchesRegex;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -74,7 +85,14 @@ public class MapsActivityInstrumentedTest {
     @Test
     public void testCustomWindowPopup() throws UiObjectNotFoundException, IOException, VolleyError {
 
-        when(mockNetwork.performRequest(any())).thenReturn(MockSuccessResponse.fromAssets(this.ctx, ""));
+        when(mockNetwork.performRequest(any()))
+                .thenAnswer(invocation -> {
+                    Request<String> request = invocation.getArgument(0);
+                    if(Pattern.compile(".*/weather.*").matcher(request.getUrl()).matches()) {
+                        return MockSuccessResponse.fromAssets(this.ctx, "sydney_current_weather.json");
+                    }
+                    return MockSuccessResponse.fromAssets(this.ctx, "sydney_forecast_weather.json");
+                });
 
         Intent intent = new Intent();
         this.activityRule.launchActivity(intent);

@@ -19,7 +19,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.DoubleSummaryStatistics;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -259,7 +261,7 @@ public class OpenWeatherForcast implements Parcelable
     }
 
     public Map<String, List> groupByDayMerge(BiFunction<java.util.List<List>, String, List> mergeFunction) {
-        final Map<String, List> map = new HashMap<>();
+        final Map<String, List> map = new TreeMap<>();
         this.groupByDay().forEach((date, lists) -> {
             map.put(date, mergeFunction.apply(lists, date));
         });

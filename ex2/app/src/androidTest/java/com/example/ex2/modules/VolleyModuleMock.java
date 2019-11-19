@@ -21,7 +21,7 @@ public class VolleyModuleMock {
 
     @Singleton
     @Provides
-    public static RequestQueue provideRequestQueue() {
-        return new RequestQueueMockBuilder().network(mock(Network.class)).create();
+    public static RequestQueue provideRequestQueue(Network network) {
+        return new RequestQueueMockBuilder().network(network).create();
     }
 }

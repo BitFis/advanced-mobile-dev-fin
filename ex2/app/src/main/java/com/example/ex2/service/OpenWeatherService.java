@@ -55,7 +55,8 @@ public class OpenWeatherService {
 
         this.wrapRequest(
                 openWeatherUrlSchema.toString(),
-                response -> success.onResponse(gson.fromJson(response, OpenWeatherResult.class)),
+                response ->
+                        success.onResponse(gson.fromJson(response, OpenWeatherResult.class)),
                 errorListener
         );
     }

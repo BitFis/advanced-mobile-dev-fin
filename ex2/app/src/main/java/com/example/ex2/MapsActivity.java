@@ -92,7 +92,7 @@ public class MapsActivity extends FragmentActivity implements
 
         this.addMarkersToMap();
 
-        this.map.setInfoWindowAdapter(new WeatherPopupAdapter(this.getApplicationContext()));
+        this.map.setInfoWindowAdapter(new WeatherPopupAdapter(this, this.openWeatherService));
 
         this.map.moveCamera(CameraUpdateFactory.newLatLng(SYDNEY));
     }
