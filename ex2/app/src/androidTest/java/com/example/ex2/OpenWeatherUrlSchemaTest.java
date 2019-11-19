@@ -45,7 +45,16 @@ public class OpenWeatherUrlSchemaTest {
 
         Uri parsed = Uri.parse(this.openWeatherUrlSchema.toString());
 
-        assertEquals(latLng.latitude, parsed.getQueryParameter("lat"));
-        assertEquals(latLng.longitude, parsed.getQueryParameter("lon"));
+        assertEquals(String.valueOf(latLng.latitude), parsed.getQueryParameter("lat"));
+        assertEquals(String.valueOf(latLng.longitude), parsed.getQueryParameter("lon"));
+    }
+
+    @Test
+    public void testForcastEndpoint() {
+        this.openWeatherUrlSchema.endpoint(OpenWeatherUrlSchema.ENDPOINT.FORCAST5);
+
+        Uri parsed = Uri.parse(this.openWeatherUrlSchema.toString());
+
+        assertEquals("/data/2.5/forecast", parsed.getPath());
     }
 }

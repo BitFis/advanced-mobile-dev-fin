@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class OpenWeatherUrlSchema {
 
     private static String OPENWEATHER_API_AUTHORITY = "api.openweathermap.org";
-    private static String OPENWEATHER_API_PATH = "/data/2.5/weather";
+    private static String OPENWEATHER_API_PATH = "/data/2.5/";
 
     private static String DEFAULT_UNIT = "metric";
     private static String DEFAULT_APPID = "xxxxxxxxxxxxxxxxxxxxxx";
@@ -24,6 +24,22 @@ public class OpenWeatherUrlSchema {
 
     private String appid = DEFAULT_APPID;
     private HashMap<String, String> parameters = new HashMap<>();
+    private ENDPOINT endpoint = ENDPOINT.WEATHER;
+
+    public enum ENDPOINT {
+        WEATHER("weather"),
+        FORCAST5("forecast");
+
+        private String endpoint;
+
+        ENDPOINT(String endpoint) {
+            this.endpoint = endpoint;
+        }
+
+        public String get() {
+            return this.endpoint;
+        }
+    }
 
     public OpenWeatherUrlSchema() {
     }
@@ -39,6 +55,11 @@ public class OpenWeatherUrlSchema {
         return this;
     }
 
+    public OpenWeatherUrlSchema endpoint(ENDPOINT endpoint) {
+        this.endpoint = endpoint;
+        return this;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -46,6 +67,7 @@ public class OpenWeatherUrlSchema {
                 .scheme("https")
                 .authority(OPENWEATHER_API_AUTHORITY)
                 .path(OPENWEATHER_API_PATH)
+                .appendPath(this.endpoint.get())
                 .appendQueryParameter(KEY_UNITS, DEFAULT_UNIT)
                 .appendQueryParameter(KEY_APPID, this.appid);
 

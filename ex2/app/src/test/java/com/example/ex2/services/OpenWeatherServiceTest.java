@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.ex2.models.openweather.OpenWeatherForcast;
 import com.example.ex2.models.openweather.OpenWeatherResult;
 import com.example.ex2.modules.GsonModule;
 import com.example.ex2.modules.TimeModule;
@@ -17,6 +18,7 @@ import com.google.gson.GsonBuilder;
 
 import org.awaitility.Awaitility;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -44,6 +46,8 @@ public class OpenWeatherServiceTest {
 
     private OpenWeatherService service;
     private OpenWeatherResult result;
+    private OpenWeatherForcast forcast;
+    private Throwable exception;
 
     @Mock
     Network mockNetwork;
@@ -59,7 +63,7 @@ public class OpenWeatherServiceTest {
     }
 
     @Test
-    public void testGetOpenweatherByLatLng() throws IOException, VolleyError {
+    public void testGetOpenweatherByLatLng() throws Throwable {
         AtomicBoolean done = new AtomicBoolean(false);
         TimeModule timeModule = new TimeModule();
 
@@ -72,20 +76,22 @@ public class OpenWeatherServiceTest {
                     done.set(true);
                 },
                 error -> {
-                    error.printStackTrace();
-                    Log.e("OpenWeatherServiceTest", error.toString());
+                    exception = error;
                     done.set(true);
                 }
         );
 
         await().untilTrue(done);
 
+        if(exception != null)
+            throw exception;
+
         Instant sunrise = Instant.ofEpochSecond(this.result.getSys().getSunrise());
         Instant sunset = Instant.ofEpochSecond(this.result.getSys().getSunset());
 
         ZoneId zone = ZoneId.ofOffset("UTC", ZoneOffset.ofTotalSeconds(this.result.getTimezone()));
 
-        //(temperature, humidity, wind speed, sun rise and sun set
+        // temperature, humidity, wind speed, sun rise and sun set
         assertEquals("City of Sydney", this.result.getName());
         assertEquals("UTC+11:00", zone.toString());
         assertEquals("05:41", timeModule.provideTime().withZone(zone).format(sunrise));
@@ -93,6 +99,30 @@ public class OpenWeatherServiceTest {
         assertEquals((Double)19.07, this.result.getMain().getTemp());
         assertEquals((Integer) 82, this.result.getMain().getHumidity());
         assertEquals((Double)8.7, this.result.getWind().getSpeed());
+    }
+
+    @Test @Ignore
+    public void testThreeDayWeatherForcast() throws Throwable {
+        AtomicBoolean done = new AtomicBoolean(false);
+
+        when(mockNetwork.performRequest(any())).thenReturn(MockSuccessResponse.fromResource("sydney_forcast_weather.json"));
+
+        this.service.getForcastLatLng(
+                new LatLng(12, 12),
+                response -> {
+                    OpenWeatherServiceTest.this.forcast = response;
+                    done.set(true);
+                },
+                error -> {
+                    done.set(true);
+                    exception = error;
+                }
+        );
+
+        await().untilTrue(done);
+
+        if(exception != null)
+            throw exception;
     }
 
 }

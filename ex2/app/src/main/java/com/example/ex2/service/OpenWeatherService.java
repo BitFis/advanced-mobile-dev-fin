@@ -5,6 +5,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.ex2.models.openweather.OpenWeatherForcast;
 import com.example.ex2.models.openweather.OpenWeatherResult;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -43,6 +44,11 @@ public class OpenWeatherService {
                 },
                 errorListener
         ));
+    }
+
+    public void getForcastLatLng(LatLng latLng, Response.Listener<OpenWeatherForcast> success, Response.ErrorListener errorListener) {
+
+
     }
 
 }
