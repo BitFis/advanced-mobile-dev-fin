@@ -101,7 +101,7 @@ public class OpenWeatherServiceTest {
         assertEquals((Double)8.7, this.result.getWind().getSpeed());
     }
 
-    @Test @Ignore
+    @Test
     public void testThreeDayWeatherForcast() throws Throwable {
         AtomicBoolean done = new AtomicBoolean(false);
 
@@ -123,6 +123,9 @@ public class OpenWeatherServiceTest {
 
         if(exception != null)
             throw exception;
-    }
 
+        // next three days the temperature
+        assertEquals("City of Sydney", this.forcast.getCity().getName());
+        assertEquals((Double)18.41, this.forcast.getList().get(0).getMain().getTemp());
+    }
 }

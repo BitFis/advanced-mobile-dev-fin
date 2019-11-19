@@ -4,11 +4,26 @@ package com.example.ex2.models.openweather;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+
+import com.example.ex2.modules.TimeModule;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.DoubleSummaryStatistics;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 /**
@@ -231,6 +246,46 @@ public class OpenWeatherForcast implements Parcelable
     public OpenWeatherForcast withCity(City city) {
         this.city = city;
         return this;
+    }
+
+    public Map<String, java.util.List<List>> groupByDay() {
+        DateTimeFormatter formatter = new TimeModule().provideDate();
+        return this.getList().stream()
+                .collect(Collectors.groupingBy(
+                        forecast -> {
+                            return formatter.format(Instant.ofEpochSecond(forecast.getDt()));
+                        }
+                ));
+    }
+
+    public Map<String, List> groupByDayMerge(BiFunction<java.util.List<List>, String, List> mergeFunction) {
+        final Map<String, List> map = new HashMap<>();
+        this.groupByDay().forEach((date, lists) -> {
+            map.put(date, mergeFunction.apply(lists, date));
+        });
+        return map;
+    }
+
+    /**
+     * At the moment only merge daly temp
+     * @param list
+     * @param date
+     * @return
+     */
+    public static List mergeAvrages(java.util.List<List> list, String date) {
+        DoubleSummaryStatistics temperature = new DoubleSummaryStatistics();
+        list.forEach(item -> {
+            temperature.accept(item.getMain().getTempMax());
+            temperature.accept(item.getMain().getTempMin());
+            temperature.accept(item.getMain().getTemp());
+        });
+        return new List()
+            .withMain(
+                new Main()
+                    .withTemp(temperature.getAverage())
+                    .withTempMax(temperature.getMax())
+                    .withTempMin(temperature.getMin())
+            );
     }
 
     @Override
