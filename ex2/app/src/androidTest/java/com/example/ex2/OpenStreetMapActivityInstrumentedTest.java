@@ -35,7 +35,7 @@ public class OpenStreetMapActivityInstrumentedTest extends ActivityInstrumentati
     }
 
     @Test
-    public void     testOpenStreetMapLocation() {
+    public void testOpenStreetMapLocation() {
         this.activityTestRule.launchActivity(new Intent());
     }
 }
