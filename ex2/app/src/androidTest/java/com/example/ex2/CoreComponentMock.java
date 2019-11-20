@@ -18,6 +18,8 @@ import dagger.Component;
 })
 public interface CoreComponentMock extends CoreComponent {
     void inject(MapsActivityInstrumentedTest test);
+    void inject(ActivityInstrumentationTest.InjectableInstrumentationTest test);
+    void inject(OpenStreetMapActivityInstrumentedTest test);
 
     @Component.Builder
     interface Builder {

@@ -52,7 +52,8 @@ public class MapsActivityInstrumentedTest {
     public ActivityTestRule<MapsActivity> activityRule = new ActivityTestRule<>(
             MapsActivity.class,
             true,     // initialTouchMode
-            false);   // launchActivity. False to customize the intent
+            false
+    );   // launchActivity. False to customize the intent
 
     private Context ctx;
     private CoreApplication app;
