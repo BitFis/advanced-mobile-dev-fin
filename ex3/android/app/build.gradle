@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 
 ext {
     daggerVersion = "2.25.2"
+    apacheCommonsVersion = "3.9"
+    guavaVersion = "3.9"
+    gsonVersion = "2.8.6"
+    volleyVersion = "1.1.1"
+    guavaVersion = "28.1-android"
 
     // test libraries
     mockitoVersion = "3.2.0"
@@ -10,6 +15,8 @@ ext {
 }
 
 android {
+    String sharedTestDir = 'src/sharedTest/java'
+
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -32,6 +39,15 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
+    sourceSets {
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+    }
 }
 
 dependencies {
@@ -39,6 +55,11 @@ dependencies {
 
     implementation "com.google.dagger:dagger:${project.daggerVersion}"
     implementation "com.google.dagger:dagger-android:${project.daggerVersion}"
+
+    implementation "com.google.code.gson:gson:${project.gsonVersion}"
+    implementation "com.android.volley:volley:${project.volleyVersion}"
+    implementation "com.google.guava:guava:${project.guavaVersion}"
+    implementation "org.apache.commons:commons-lang3:${project.apacheCommonsVersion}"
 
     annotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}"

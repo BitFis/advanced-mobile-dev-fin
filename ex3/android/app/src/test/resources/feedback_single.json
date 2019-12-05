@@ -1,0 +1,11 @@
+{
+  "id": "1",
+  "name": "Hans Example",
+  "value": "This is a test feedback for later",
+  "location": "rovaniemi, fi",
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/feedback/1"
+    }
+  }
+}

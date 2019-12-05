@@ -1,0 +1,32 @@
+{
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/feedback?page=1"
+    },
+    "first": {
+      "href": "http://localhost:8080/feedback"
+    },
+    "last": {
+      "href": "http://localhost:8080/feedback?page=1"
+    }
+  },
+  "_embedded": {
+    "feedback": [
+      {
+        "id": "1",
+        "name": "Hans Example",
+        "value": "This is a test feedback for later",
+        "location": "rovaniemi, fi",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/feedback/1"
+          }
+        }
+      }
+    ]
+  },
+  "page_count": 1,
+  "page_size": 25,
+  "total_items": 1,
+  "page": 1
+}
