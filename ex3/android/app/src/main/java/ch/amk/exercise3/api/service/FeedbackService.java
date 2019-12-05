@@ -10,8 +10,8 @@ import ch.amk.exercise3.api.models.Feedbacks;
 public class FeedbackService {
 
     @Inject
-    FeedbackService() { }
-
+    public FeedbackService() { }
+/*
     public Feedback get(int id) {
         throw new NotImplementedException("not implemented yet");
     }
@@ -35,5 +35,5 @@ public class FeedbackService {
     public void update(int id) {
         throw new NotImplementedException("not implemented yet");
     }
-
+*/
 }

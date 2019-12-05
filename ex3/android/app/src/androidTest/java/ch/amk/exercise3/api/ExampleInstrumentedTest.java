@@ -3,6 +3,7 @@ package ch.amk.exercise3.api;
 import android.content.Context;
 import android.content.Intent;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import androidx.test.platform.app.InstrumentationRegistry;

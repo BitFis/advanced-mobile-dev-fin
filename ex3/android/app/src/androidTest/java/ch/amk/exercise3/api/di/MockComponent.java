@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import ch.amk.exercise3.api.ExampleInstrumentedTest;
 import ch.amk.exercise3.api.app.MainActivityModule;
+import ch.amk.exercise3.api.ui.FeedbackViewInstrumentedTest;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.AndroidInjector;
@@ -14,8 +15,9 @@ import dagger.android.AndroidInjector;
         MainActivityModule.class,
 
         // mocked modules
-        MockTestServiceModule.class,
+        MockFeedbackServiceModule.class,
 })
 public interface MockComponent extends AndroidInjector<MockApplication> {
     void inject(ExampleInstrumentedTest exampleInstrumentedTest);
+    void inject(FeedbackViewInstrumentedTest feedbackViewInstrumentedTest);
 }
