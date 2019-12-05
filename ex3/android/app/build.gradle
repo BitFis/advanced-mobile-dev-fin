@@ -65,6 +65,9 @@ dependencies {
     implementation "org.apache.commons:commons-lang3:${project.apacheCommonsVersion}"
 
     implementation "com.mikepenz:fastadapter:${project.fastAdapterVersion}"
+    implementation "com.mikepenz:fastadapter-extensions-swipe:${project.fastAdapterVersion}"
+    implementation "com.mikepenz:fastadapter-extensions-drag:${project.fastAdapterVersion}"
+    implementation "com.mikepenz:fastadapter-extensions-utils:${project.fastAdapterVersion}"
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
@@ -74,6 +77,10 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${androidXVersion}"
     implementation "androidx.recyclerview:recyclerview:${androidXVersion}"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    // design dependencies
+    implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.6-kotlin@aar'
+    implementation "com.mikepenz:iconics-core:4.0.2"
 
     testImplementation('junit:junit:4.12') {
         exclude group: 'org.hamcrest'
