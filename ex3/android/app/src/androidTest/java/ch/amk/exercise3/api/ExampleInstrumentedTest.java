@@ -9,9 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import ch.amk.exercise3.api.di.MockApplication;
-import ch.amk.exercise3.api.service.TestService;
-import dagger.Module;
-import dagger.android.AndroidInjector;
+import ch.amk.exercise3.api.service.FeedbackService;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,7 +30,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ExampleInstrumentedTest {
 
     @Inject
-    TestService service;
+    FeedbackService service;
 
     @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(
@@ -51,9 +49,6 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void useAppContext() {
-        // Context of the app under test.
-        when(this.service.getText()).thenReturn("Android Test Environment");
-
         this.activityRule.launchActivity(new Intent());
 
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
