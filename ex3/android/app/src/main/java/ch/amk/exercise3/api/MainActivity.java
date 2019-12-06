@@ -138,11 +138,13 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Feedback feedback = data.getParcelableExtra(FeedbackFormActivity.INTENT_EXTRA_ATTR_FEEDBACK);
+        if(data != null) {
+            Feedback feedback = data.getParcelableExtra(FeedbackFormActivity.INTENT_EXTRA_ATTR_FEEDBACK);
 
-        int position = this.itemAdapter.getAdapterPosition(feedback.getId());
-        ((FeedbackItem)this.itemAdapter.getAdapterItem(position)).set(feedback);
-        this.fastAdapter.notifyAdapterItemChanged(position);
+            int position = this.itemAdapter.getAdapterPosition(feedback.getId());
+            ((FeedbackItem)this.itemAdapter.getAdapterItem(position)).set(feedback);
+            this.fastAdapter.notifyAdapterItemChanged(position);
+        }
     }
 
     private void loadFeedbacks() {

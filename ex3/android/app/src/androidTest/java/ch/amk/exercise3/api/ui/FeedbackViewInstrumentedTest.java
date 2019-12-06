@@ -35,6 +35,7 @@ import ch.amk.exercise3.api.service.FeedbackService;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -123,8 +124,14 @@ public class FeedbackViewInstrumentedTest {
     }
 
     @Test
-    public void testCancelUpdate() {
+    public void testCancelUpdate() throws UiObjectNotFoundException {
+        onView(allOf(withId(R.id.material_drawer_name), withText(containsString("Hans Zimmer")))).perform(click());
 
+        device.findObject(new UiSelector().textContains("Hans Zimmer")).setText("New Newman");
+
+        pressBack();
+
+        onView(allOf(withId(R.id.material_drawer_name), withText(containsString("New Newman")))).check(doesNotExist());
     }
 
     @Test
