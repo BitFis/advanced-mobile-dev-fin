@@ -11,7 +11,7 @@ public class FeedbackService {
 
     @Inject
     public FeedbackService() { }
-/*
+
     public Feedback get(int id) {
         throw new NotImplementedException("not implemented yet");
     }
@@ -35,5 +35,5 @@ public class FeedbackService {
     public void update(int id) {
         throw new NotImplementedException("not implemented yet");
     }
-*/
+
 }

@@ -12,6 +12,7 @@ import ch.amk.exercise3.api.service.FeedbackService;
 import ch.amk.exercise3.api.ui.FeedbackItem;
 import dagger.android.AndroidInjection;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
 
         this.setupFeedbackList();
         this.setupAddButton();
+
+        this.loadFeedbacks();
     }
 
     private void setupAddButton() {
@@ -78,24 +81,15 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
                 .size(IconicsSize.dp(24)));
     }
 
-    private void setupFeedbackList() {
 
+
+    private void setupFeedbackList() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        FeedbackItem item = new FeedbackItem(new Feedback().withId(1)
-                .withName("Lucien Zuercher")
-                .withValue("Some one"));
-        FeedbackItem item2 = new FeedbackItem(new Feedback().withId(2).withName("Hello World").withValue("Content"));
-
-        this.itemAdapter.add(item);
-        this.itemAdapter.add(item2);
-
         this.fastAdapter.notifyAdapterDataSetChanged();
 
-        this.fastAdapter.setOnClickListener((view, iAdapter, o, integer) -> {
-            return false;
-        });
+        this.fastAdapter.setOnClickListener((view, iAdapter, o, integer) -> this.showFeedback(((FeedbackItem)o).get()));
 
         // setup swip to delete
         IconicsDrawable leaveBehindDrawableLeft = new IconicsDrawable(this)
@@ -119,6 +113,23 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
 
         this.touchHelper = new ItemTouchHelper(touchCallback);
         touchHelper.attachToRecyclerView(this.recyclerView);
+    }
+
+    private boolean showFeedback(Feedback feedback) {
+        Intent intent = new Intent(this, FeedbackFormActivity.class);
+
+        intent.putExtra(FeedbackFormActivity.INTENT_EXTRA_ATTR_FEEDBACK, feedback);
+
+        this.startActivity(intent);
+
+        return false;
+    }
+
+    private void loadFeedbacks() {
+        this.itemAdapter.add(FeedbackItem.from(
+                this.feedbackService.getAll().getEmbedded().getFeedback()
+        ));
+        this.fastAdapter.notifyAdapterDataSetChanged();
     }
 
     @Override

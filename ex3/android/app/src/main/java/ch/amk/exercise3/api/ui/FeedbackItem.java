@@ -9,7 +9,10 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.amk.exercise3.api.R;
 import ch.amk.exercise3.api.models.Feedback;
@@ -18,8 +21,20 @@ public class FeedbackItem extends AbstractItem<FeedbackItem.ViewHolder> {
 
     private Feedback feedback;
 
-    public FeedbackItem(Feedback item){
+    private FeedbackItem(Feedback item){
         this.feedback = item;
+    }
+
+    public static FeedbackItem from (Feedback feedback) {
+        return new FeedbackItem(feedback);
+    }
+
+    public static List<FeedbackItem> from(Collection<Feedback> feedbacks) {
+        return feedbacks.stream().map(FeedbackItem::from).collect(Collectors.toList());
+    }
+
+    public Feedback get() {
+        return this.feedback;
     }
 
     @NotNull
