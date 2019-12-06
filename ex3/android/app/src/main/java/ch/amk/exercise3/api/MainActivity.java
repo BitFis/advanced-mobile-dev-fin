@@ -1,6 +1,7 @@
 package ch.amk.exercise3.api;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -12,9 +13,11 @@ import ch.amk.exercise3.api.service.FeedbackService;
 import ch.amk.exercise3.api.ui.FeedbackItem;
 import dagger.android.AndroidInjection;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,12 +33,18 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.IconicsSize;
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic;
 
+import org.apache.commons.lang3.NotImplementedException;
+
+import java.io.PipedOutputStream;
 import java.util.Base64;
+import java.util.concurrent.ExecutionException;
 
 import javax.annotation.meta.When;
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements ItemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback {
+
+    private static String TAG = "MainActivity";
 
     private RecyclerView recyclerView;
     private FastAdapter fastAdapter;
@@ -120,15 +129,30 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
 
         intent.putExtra(FeedbackFormActivity.INTENT_EXTRA_ATTR_FEEDBACK, feedback);
 
-        this.startActivity(intent);
+        this.startActivityForResult(intent, Activity.RESULT_FIRST_USER);
 
         return false;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Feedback feedback = data.getParcelableExtra(FeedbackFormActivity.INTENT_EXTRA_ATTR_FEEDBACK);
+
+        int position = this.itemAdapter.getAdapterPosition(feedback.getId());
+        ((FeedbackItem)this.itemAdapter.getAdapterItem(position)).set(feedback);
+        this.fastAdapter.notifyAdapterItemChanged(position);
+    }
+
     private void loadFeedbacks() {
-        this.itemAdapter.add(FeedbackItem.from(
-                this.feedbackService.getAll().getEmbedded().getFeedback()
-        ));
+        try {
+            this.itemAdapter.add(FeedbackItem.from(
+                    this.feedbackService.getAll().get().getEmbedded().getFeedback()
+            ));
+        } catch (InterruptedException|ExecutionException e) {
+            Log.e(TAG, "loading feedbacks failed", e);
+        }
         this.fastAdapter.notifyAdapterDataSetChanged();
     }
 

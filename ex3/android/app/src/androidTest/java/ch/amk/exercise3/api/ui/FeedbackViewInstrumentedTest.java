@@ -6,10 +6,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
+
+import com.android.volley.toolbox.RequestFuture;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -29,6 +36,9 @@ import ch.amk.exercise3.api.service.FeedbackService;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -37,6 +47,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -53,18 +64,22 @@ public class FeedbackViewInstrumentedTest {
     @Inject
     public FeedbackService feedbackService;
 
+    private Feedbacks feedbacks;
+    private UiDevice device;
+
     @Before
     public void setup() {
         initMocks(this);
 
         MockApplication app = ((MockApplication) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext());
         app.getComponent().inject(this);
+
+        this.device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
-    @Test
-    public void testChangeItemInList() throws InterruptedException {
-
-        Feedbacks feedbacks = new Feedbacks().withEmbedded(new Embedded().withFeedback(new ArrayList<Feedback>() {{
+    @Before
+    public void setupSampleData() {
+        this.feedbacks = new Feedbacks().withEmbedded(new Embedded().withFeedback(new ArrayList<Feedback>() {{
             add(new Feedback()
                     .withId(1)
                     .withName("Hans Zimmer")
@@ -77,10 +92,43 @@ public class FeedbackViewInstrumentedTest {
                     .withValue("Swiss Comment"));
         }}));
 
-        when(this.feedbackService.getAll()).thenReturn(feedbacks);
+        when(this.feedbackService.getAll()).thenAnswer(invocation -> {
+            RequestFuture<Feedbacks> requestFuture = RequestFuture.newFuture();
+            requestFuture.onResponse(feedbacks);
+            return requestFuture;
+        });
 
         this.activityRule.launchActivity(new Intent());
+    }
 
+    @Test
+    public void testChangeItemInList() throws UiObjectNotFoundException, InterruptedException {
         onView(allOf(withId(R.id.material_drawer_name), withText(containsString("Hans Zimmer")))).perform(click());
+
+        device.findObject(new UiSelector().textContains("Hans Zimmer")).setText("New Newman");
+        device.findObject(new UiSelector().textContains("comment")).setText("Changed Comment");
+        device.findObject(new UiSelector().textContains("fi")).setText("Zug, ch");
+
+        onView(withId(R.id.button_save)).perform(click());
+
+        ArgumentCaptor<Feedback> captor = ArgumentCaptor.forClass(Feedback.class);
+
+        verify(this.feedbackService).save(captor.capture());
+
+        Feedback values = captor.getValue();
+
+        // check if new can be found
+        onView(allOf(withId(R.id.material_drawer_name), withText(containsString("New Newman")))).check(matches(isDisplayed()));
+        onView(allOf(withId(R.id.material_drawer_name), withText(containsString("Hans Zimmer")))).check(doesNotExist());
+    }
+
+    @Test
+    public void testCancelUpdate() {
+
+    }
+
+    @Test
+    public void testAddingNewFeedback() {
+
     }
 }

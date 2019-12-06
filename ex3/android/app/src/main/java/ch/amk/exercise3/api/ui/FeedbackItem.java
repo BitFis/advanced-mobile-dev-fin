@@ -23,6 +23,7 @@ public class FeedbackItem extends AbstractItem<FeedbackItem.ViewHolder> {
 
     private FeedbackItem(Feedback item){
         this.feedback = item;
+        this.setIdentifier(item.getId());
     }
 
     public static FeedbackItem from (Feedback feedback) {
@@ -35,6 +36,10 @@ public class FeedbackItem extends AbstractItem<FeedbackItem.ViewHolder> {
 
     public Feedback get() {
         return this.feedback;
+    }
+
+    public void set(Feedback feedback) {
+        this.feedback = feedback;
     }
 
     @NotNull

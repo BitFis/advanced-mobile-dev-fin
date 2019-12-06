@@ -2,8 +2,11 @@ package ch.amk.exercise3.api;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -23,8 +26,11 @@ import javax.inject.Inject;
 import ch.amk.exercise3.api.models.Feedback;
 import ch.amk.exercise3.api.service.FeedbackService;
 import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
 
+/**
+ * Activity takes in an Intent with extra defined with key *INTENT_EXTRA_ATTR_FEEDBACK*.
+ * Same Intent will be returned, it will contain the changed Feedback or the created Feedback.
+ */
 public class FeedbackFormActivity extends AppCompatActivity {
 
     public static String INTENT_EXTRA_ATTR_FEEDBACK = "feedback";
@@ -94,6 +100,13 @@ public class FeedbackFormActivity extends AppCompatActivity {
 
     private void save() {
         this.feedbackService.save(this.feedback);
+
+        Intent intent = new Intent();
+
+        intent.putExtra(INTENT_EXTRA_ATTR_FEEDBACK, this.feedback);
+
+        this.setResult(Activity.RESULT_OK, intent);
+        this.finish();
     }
 
     private void setEditTextOnTextChanged(int editTextId, Consumer<String> function) {
