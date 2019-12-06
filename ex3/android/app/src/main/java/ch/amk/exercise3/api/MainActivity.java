@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
@@ -28,6 +29,9 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.IconicsSize;
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic;
 
+import java.util.Base64;
+
+import javax.annotation.meta.When;
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements ItemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback {
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
     //drag & drop
     private ItemTouchHelper touchHelper;
     private SimpleDragCallback touchCallback;
+
+    private FloatingActionButton fabAdd;
 
     @Inject
     FeedbackService feedbackService;
@@ -55,6 +61,24 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
         this.recyclerView = (RecyclerView) this.findViewById(R.id.feedback_list);
         this.recyclerView.setAdapter(this.fastAdapter);
         this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        this.fabAdd = this.findViewById(R.id.button_add);
+
+        this.setupFeedbackList();
+        this.setupAddButton();
+    }
+
+    private void setupAddButton() {
+        this.fabAdd.setOnClickListener(v -> {
+
+        });
+
+        this.fabAdd.setImageDrawable(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_plus)
+                .color(IconicsColor.colorInt(Color.WHITE))
+                .size(IconicsSize.dp(24)));
+    }
+
+    private void setupFeedbackList() {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -90,8 +114,8 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
                 ItemTouchHelper.LEFT,
                 getColor(android.R.color.holo_blue_dark)
         )
-        .withBackgroundSwipeRight(getColor(android.R.color.holo_red_dark))
-        .withLeaveBehindSwipeRight(leaveBehindDrawableLeft);
+                .withBackgroundSwipeRight(getColor(android.R.color.holo_red_dark))
+                .withLeaveBehindSwipeRight(leaveBehindDrawableLeft);
 
         this.touchHelper = new ItemTouchHelper(touchCallback);
         touchHelper.attachToRecyclerView(this.recyclerView);
