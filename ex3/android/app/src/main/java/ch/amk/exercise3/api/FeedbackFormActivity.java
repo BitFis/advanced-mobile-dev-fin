@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import ch.amk.exercise3.api.models.Feedback;
 import ch.amk.exercise3.api.service.FeedbackService;
+import ch.amk.exercise3.api.utils.ExceptionBox;
 import dagger.android.AndroidInjection;
 
 /**
@@ -99,14 +100,21 @@ public class FeedbackFormActivity extends AppCompatActivity {
     }
 
     private void save() {
-        this.feedbackService.save(this.feedback);
+        this.feedbackService.save(this.feedback)
+            .thenAccept(feedback -> {
+                Intent intent = new Intent();
 
-        Intent intent = new Intent();
+                intent.putExtra(INTENT_EXTRA_ATTR_FEEDBACK, feedback);
 
-        intent.putExtra(INTENT_EXTRA_ATTR_FEEDBACK, this.feedback);
+                this.setResult(Activity.RESULT_OK, intent);
+                this.finish();
+            })
+            .exceptionally(throwable -> {
+                new ExceptionBox(throwable).show(this);
+                throwable.printStackTrace();
+                return null;
+            });
 
-        this.setResult(Activity.RESULT_OK, intent);
-        this.finish();
     }
 
     private void setEditTextOnTextChanged(int editTextId, Consumer<String> function) {

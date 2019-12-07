@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -57,18 +59,33 @@ public class FeedbackService {
         throw new NotImplementedException("not implemented yet");
     }
 
-    public CompletableFuture<Feedbacks> getAll() {
-        CompletableFuture<Feedbacks> completableFuture = new CompletableFuture<>();
+    private CompletableFuture createRequest(
+            int method,
+            String url,
+            Consumer<String> success,
+            CompletableFuture completableFuture) {
+        return createRequest(
+                method,
+                url,
+                success,
+                completableFuture,
+                new HashMap<>()
+        );
+    }
 
-        String url = this.getFeedbackPath();
-
-        StringRequest req = new StringRequest(
-                Request.Method.GET,
+    private CompletableFuture createRequest(
+            int method,
+            String url,
+            Consumer<String> success,
+            CompletableFuture completableFuture,
+            Map<String, String> parameters) {
+        this.requestQueue.add(new StringRequest(
+                method,
                 url,
                 response -> {
                     try {
-                        completableFuture.complete(this.gson.fromJson(response, Feedbacks.class));
-                    } catch (JsonSyntaxException ex) {
+                        success.accept(response);
+                    } catch (Throwable ex) {
                         completableFuture.completeExceptionally(ex);
                     }
                 },
@@ -79,13 +96,31 @@ public class FeedbackService {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Accept", "*/*");
 
+                if(method != Method.GET) {
+                    params.put("Content-Type", "application/json");
+                }
+
                 return params;
             }
-        };
 
-        this.requestQueue.add(req);
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                return FeedbackService.this.gson.toJson(parameters, Map.class).getBytes();
+            }
+        });
 
         return completableFuture;
+    }
+
+    public CompletableFuture<Feedbacks> getAll() {
+        CompletableFuture<Feedbacks> completableFuture = new CompletableFuture<>();
+
+        return this.createRequest(
+                Request.Method.GET,
+                this.getFeedbackPath(),
+                s -> completableFuture.complete(this.gson.fromJson(s, Feedbacks.class)),
+                completableFuture
+        );
     }
 
     public void delete(int id) {
@@ -98,7 +133,21 @@ public class FeedbackService {
      * @param feedback
      * @return
      */
-    public RequestFuture<Feedback> save(Feedback feedback) {
-        throw new NotImplementedException("not implemented yet");
+    public CompletableFuture<Feedback> save(Feedback feedback) {
+        Map<String, String> values = new HashMap<String, String>() {{
+            put("name", feedback.getName());
+            put("value", feedback.getValue());
+            put("location", feedback.getLocation());
+        }};
+
+        CompletableFuture<Feedback> completableFuture = new CompletableFuture<>();
+
+        return this.createRequest(
+                Request.Method.POST,
+                this.getFeedbackPath(),
+                s -> completableFuture.complete(this.gson.fromJson(s, Feedback.class)),
+                completableFuture,
+                values
+        );
     }
 }
