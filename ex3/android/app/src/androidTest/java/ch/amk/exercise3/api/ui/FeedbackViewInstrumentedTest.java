@@ -1,6 +1,7 @@
 package ch.amk.exercise3.api.ui;
 
 import android.content.Intent;
+import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,16 +13,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
 import com.android.volley.toolbox.RequestFuture;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -33,7 +30,6 @@ import ch.amk.exercise3.api.models.Feedback;
 import ch.amk.exercise3.api.models.Feedbacks;
 import ch.amk.exercise3.api.service.FeedbackService;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -43,10 +39,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -135,7 +128,21 @@ public class FeedbackViewInstrumentedTest {
     }
 
     @Test
-    public void testAddingNewFeedback() {
+    public void testAddingNewFeedback() throws UiObjectNotFoundException {
+        onView(withId(R.id.button_add)).perform(click());
 
+        device.findObject(new UiSelector().description("Name")).setText("Other Man");
+        device.findObject(new UiSelector().description("Feedback")).setText("Commenting");
+        device.findObject(new UiSelector().description("Location")).setText("Paris, fr");
+
+        onView(withId(R.id.button_save)).perform(click());
+
+        onView(allOf(withId(R.id.material_drawer_name), withText(containsString("Other Man"))))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void testDeleteFeedback() {
+        
     }
 }

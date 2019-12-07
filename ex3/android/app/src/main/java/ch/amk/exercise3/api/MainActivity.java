@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
 
     private void setupAddButton() {
         this.fabAdd.setOnClickListener(v -> {
-
+            Intent intent = new Intent(this, FeedbackFormActivity.class);
+            this.startActivityForResult(intent, Activity.RESULT_FIRST_USER);
         });
 
         this.fabAdd.setImageDrawable(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_plus)
@@ -113,12 +114,10 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
         this.touchCallback = new SimpleSwipeDragCallback(
                 this,
                 this,
-                leaveBehindDrawableRigth,
-                ItemTouchHelper.LEFT,
-                getColor(android.R.color.holo_blue_dark)
-        )
-                .withBackgroundSwipeRight(getColor(android.R.color.holo_red_dark))
-                .withLeaveBehindSwipeRight(leaveBehindDrawableLeft);
+                leaveBehindDrawableLeft,
+                ItemTouchHelper.RIGHT,
+                getColor(android.R.color.holo_red_dark)
+        );
 
         this.touchHelper = new ItemTouchHelper(touchCallback);
         touchHelper.attachToRecyclerView(this.recyclerView);
@@ -142,8 +141,16 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
             Feedback feedback = data.getParcelableExtra(FeedbackFormActivity.INTENT_EXTRA_ATTR_FEEDBACK);
 
             int position = this.itemAdapter.getAdapterPosition(feedback.getId());
-            ((FeedbackItem)this.itemAdapter.getAdapterItem(position)).set(feedback);
-            this.fastAdapter.notifyAdapterItemChanged(position);
+
+            if(position >= 0) {
+                // update item
+                ((FeedbackItem)this.itemAdapter.getAdapterItem(position)).set(feedback);
+                this.fastAdapter.notifyAdapterItemChanged(position);
+            } else {
+                // insert new item
+                this.itemAdapter.add(FeedbackItem.from(feedback));
+            }
+
         }
     }
 
