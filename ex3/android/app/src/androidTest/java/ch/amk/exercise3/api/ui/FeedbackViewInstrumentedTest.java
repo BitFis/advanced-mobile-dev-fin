@@ -35,12 +35,14 @@ import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -75,12 +77,12 @@ public class FeedbackViewInstrumentedTest {
     public void setupSampleData() {
         this.feedbacks = new Feedbacks().withEmbedded(new Embedded().withFeedback(new ArrayList<Feedback>() {{
             add(new Feedback()
-                    .withId(1)
+                    .withId(101)
                     .withName("Hans Zimmer")
                     .withValue("This is a comment")
                     .withLocation("Rovaniemi, fi"));
             add(new Feedback()
-                    .withId(2)
+                    .withId(202)
                     .withName("Fritz Matz")
                     .withLocation("Zug, ch")
                     .withValue("Swiss Comment"));
@@ -131,18 +133,32 @@ public class FeedbackViewInstrumentedTest {
     public void testAddingNewFeedback() throws UiObjectNotFoundException {
         onView(withId(R.id.button_add)).perform(click());
 
-        device.findObject(new UiSelector().description("Name")).setText("Other Man");
-        device.findObject(new UiSelector().description("Feedback")).setText("Commenting");
-        device.findObject(new UiSelector().description("Location")).setText("Paris, fr");
+        Feedback newFeedback = new Feedback()
+                .withName("Other Man")
+                .withLocation("Paris, fr")
+                .withValue("Commenting");
+
+        device.findObject(new UiSelector().description("Name")).setText(newFeedback.getName());
+        device.findObject(new UiSelector().description("Feedback")).setText(newFeedback.getValue());
+        device.findObject(new UiSelector().description("Location")).setText(newFeedback.getLocation());
 
         onView(withId(R.id.button_save)).perform(click());
 
         onView(allOf(withId(R.id.material_drawer_name), withText(containsString("Other Man"))))
                 .check(matches(isDisplayed()));
+
+        ArgumentCaptor<Feedback> feedbackArgumentCaptor = ArgumentCaptor.forClass(Feedback.class);
+        verify(this.feedbackService).save(feedbackArgumentCaptor.capture());
+
+        assertEquals(newFeedback, feedbackArgumentCaptor.getValue());
     }
 
     @Test
-    public void testDeleteFeedback() {
-        
+    public void testDeleteFeedback() throws UiObjectNotFoundException, InterruptedException {
+        device.findObject(new UiSelector().textContains("Fritz Matz")).swipeRight(10);
+
+        Thread.sleep(200);
+
+        verify(this.feedbackService).delete(202);
     }
 }

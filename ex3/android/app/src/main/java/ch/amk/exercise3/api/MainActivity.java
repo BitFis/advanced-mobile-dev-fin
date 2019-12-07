@@ -102,22 +102,20 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
         this.fastAdapter.setOnClickListener((view, iAdapter, o, integer) -> this.showFeedback(((FeedbackItem)o).get()));
 
         // setup swip to delete
-        IconicsDrawable leaveBehindDrawableLeft = new IconicsDrawable(this)
+        IconicsDrawable gmiDeleteDrawable = new IconicsDrawable(this)
                 .icon(MaterialDesignIconic.Icon.gmi_delete)
-                .color(IconicsColor.colorInt(Color.WHITE))
-                .size(IconicsSize.dp(24));
-        IconicsDrawable leaveBehindDrawableRigth = new IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_archive)
                 .color(IconicsColor.colorInt(Color.WHITE))
                 .size(IconicsSize.dp(24));
 
         this.touchCallback = new SimpleSwipeDragCallback(
                 this,
                 this,
-                leaveBehindDrawableLeft,
+                gmiDeleteDrawable,
                 ItemTouchHelper.RIGHT,
                 getColor(android.R.color.holo_red_dark)
-        );
+        )
+                .withBackgroundSwipeRight(getColor(android.R.color.holo_red_dark))
+                .withLeaveBehindSwipeRight(gmiDeleteDrawable);
 
         this.touchHelper = new ItemTouchHelper(touchCallback);
         touchHelper.attachToRecyclerView(this.recyclerView);
@@ -177,6 +175,6 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
 
     @Override
     public void itemSwiped(int i, int i1) {
-
+        this.feedbackService.delete((int)this.itemAdapter.getAdapterItem(i).getIdentifier());
     }
 }
