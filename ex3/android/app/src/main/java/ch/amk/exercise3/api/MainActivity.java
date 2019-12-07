@@ -8,18 +8,28 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import ch.amk.exercise3.api.app.VolleyModule;
 import ch.amk.exercise3.api.models.Feedback;
+import ch.amk.exercise3.api.models.Feedbacks;
 import ch.amk.exercise3.api.service.FeedbackService;
 import ch.amk.exercise3.api.ui.FeedbackItem;
+import ch.amk.exercise3.api.utils.ExceptionBox;
 import dagger.android.AndroidInjection;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
@@ -37,7 +47,11 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.PipedOutputStream;
 import java.util.Base64;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.annotation.meta.When;
 import javax.inject.Inject;
@@ -58,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
 
     @Inject
     FeedbackService feedbackService;
+
+    @Inject
+    RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,19 +165,23 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
                 // insert new item
                 this.itemAdapter.add(FeedbackItem.from(feedback));
             }
-
         }
     }
 
     private void loadFeedbacks() {
-        try {
-            this.itemAdapter.add(FeedbackItem.from(
-                    this.feedbackService.getAll().get().getEmbedded().getFeedback()
-            ));
-        } catch (InterruptedException|ExecutionException e) {
-            Log.e(TAG, "loading feedbacks failed", e);
-        }
-        this.fastAdapter.notifyAdapterDataSetChanged();
+        this.feedbackService.getAll()
+            .thenAccept(feedbacks -> {
+                this.runOnUiThread(() -> {
+                    this.itemAdapter.add(FeedbackItem.from(
+                            feedbacks.getEmbedded().getFeedback()
+                    ));
+                    this.fastAdapter.notifyAdapterDataSetChanged();
+                });
+            }).exceptionally(throwable -> {
+                new ExceptionBox(throwable).show(this);
+                throwable.printStackTrace();
+                return null;
+            });
     }
 
     @Override

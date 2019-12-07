@@ -19,7 +19,9 @@ public class CoreApplication extends Application implements HasAndroidInjector {
     }
 
     protected void createComponent() {
-        DaggerCoreComponent.create().inject(this);
+        DaggerCoreComponent.builder()
+                .application(this).build()
+                .inject(this);
     }
 
     @Override

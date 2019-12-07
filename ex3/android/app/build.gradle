@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'de.mobilej.unmock'
 
 ext {
     daggerVersion = "2.25.2"
@@ -17,6 +18,34 @@ ext {
     awaitilityVersion = "4.0.1"
 }
 
+unMock {
+    keep "android.widget.BaseAdapter"
+    keep "android.widget.ArrayAdapter"
+    keep "android.os.Bundle"
+    keepStartingWith "android.database.MatrixCursor"
+    keep "android.database.AbstractCursor"
+    keep "android.database.CrossProcessCursor"
+    keepStartingWith "android.text.TextUtils"
+    keepStartingWith "android.util."
+    keepStartingWith "android.text."
+    keepStartingWith "android.content.ContentValues"
+    keepStartingWith "android.content.ComponentName"
+    keepStartingWith "android.content.ContentUris"
+    keepStartingWith "android.content.ContentProviderOperation"
+    keepStartingWith "android.content.ContentProviderResult"
+    keepStartingWith "android.content.UriMatcher"
+    keepStartingWith "android.content.Intent"
+    keep "android.location.Location"
+    keepStartingWith "android.content.res.Configuration"
+    keepStartingWith "org."
+    keepStartingWith "libcore."
+    keepStartingWith "com.android.internal.R"
+    keepStartingWith "com.android.internal.util."
+    keep "android.net.Uri"
+
+    keepAndRename "java.nio.charset.Charsets" to "xjava.nio.charset.Charsets"
+}
+
 android {
     String sharedTestDir = 'src/sharedTest/java'
 
@@ -31,11 +60,17 @@ android {
 //        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "ch.amk.exercise3.api.TestRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.returnDefaultValues = true
     }
 
     compileOptions {
@@ -90,6 +125,15 @@ dependencies {
         exclude group: 'org.hamcrest'
     }
     testImplementation('com.android.support.test:runner:1.0.2') {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation('org.powermock:powermock-core:2.0.4') {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation('org.powermock:powermock-module-junit4:2.0.4') {
+        exclude group: 'org.hamcrest'
+    }
+    testImplementation('org.powermock:powermock-api-mockito2:2.0.4') {
         exclude group: 'org.hamcrest'
     }
     testImplementation "org.awaitility:awaitility:${project.awaitilityVersion}"

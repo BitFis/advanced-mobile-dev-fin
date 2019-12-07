@@ -144,7 +144,7 @@ public class FeedbackViewInstrumentedTest {
 
         onView(withId(R.id.button_save)).perform(click());
 
-        onView(allOf(withId(R.id.material_drawer_name), withText(containsString("Other Man"))))
+        onView(allOf(withId(R.id.material_drawer_name), withText(containsString(newFeedback.getName()))))
                 .check(matches(isDisplayed()));
 
         ArgumentCaptor<Feedback> feedbackArgumentCaptor = ArgumentCaptor.forClass(Feedback.class);
