@@ -9,6 +9,11 @@ import static org.mockito.Mockito.when;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.BaseHttpStack;
+import com.android.volley.toolbox.Volley;
+
 import ch.amk.exercise3.api.di.MockApplication;
 import ch.amk.exercise3.api.service.FeedbackService;
 
@@ -54,5 +59,10 @@ public class ExampleInstrumentedTest {
 
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("ch.amk.exercise3.api", appContext.getPackageName());
+    }
+
+    @Test
+    public void testVolleyRequest() {
+
     }
 }

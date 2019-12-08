@@ -1,5 +1,7 @@
 package ch.amk.exercise3.api.app;
 
+import android.net.Uri;
+
 import javax.inject.Named;
 
 import dagger.Module;
@@ -10,8 +12,8 @@ public class ConfigModule {
 
     @Provides
     @Named("backend_url")
-    public String provideBackendUrl() {
-        return "http://172.28.128.3:8080";
+    public Uri provideBackendUrl() {
+        return  Uri.parse("http://172.28.128.3:8080");
     }
 
 }
