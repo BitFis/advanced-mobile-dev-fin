@@ -21,6 +21,7 @@ import javax.inject.Named;
 
 import ch.amk.exercise3.api.models.Feedback;
 import ch.amk.exercise3.api.models.Feedbacks;
+import ch.amk.exercise3.api.utils.RequestBuilder;
 
 public class FeedbackService {
 
@@ -54,77 +55,35 @@ public class FeedbackService {
                 .toString();
     }
 
-    public RequestFuture<Feedback> get(int id) {
-        throw new NotImplementedException("not implemented yet");
-    }
+    public CompletableFuture<Feedback> get(int id) {
+        CompletableFuture<String> completableFuture = new CompletableFuture<>();
 
-    private CompletableFuture createRequest(
-            int method,
-            String url,
-            Consumer<String> success,
-            CompletableFuture completableFuture) {
-        return createRequest(
-                method,
-                url,
-                success,
-                completableFuture,
-                new HashMap<>()
-        );
-    }
+        RequestBuilder.get(this.requestQueue, this.getFeedbackPath(id))
+                .setCompletableFuture(completableFuture)
+                .addToRequestQueue();
 
-    private CompletableFuture createRequest(
-            int method,
-            String url,
-            Consumer<String> success,
-            CompletableFuture completableFuture,
-            Map<String, String> parameters) {
-        this.requestQueue.add(new StringRequest(
-                method,
-                url,
-                response -> {
-                    try {
-                        success.accept(response);
-                    } catch (Throwable ex) {
-                        completableFuture.completeExceptionally(ex);
-                    }
-                },
-                completableFuture::completeExceptionally
-        ) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("Accept", "*/*");
-
-                if(method != Method.GET) {
-                    params.put("Content-Type", "application/json");
-                }
-
-                return params;
-            }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                return FeedbackService.this.gson.toJson(parameters, Map.class).getBytes();
-            }
-        });
-
-        return completableFuture;
+        return completableFuture.thenApply(s -> this.gson.fromJson(s, Feedback.class));
     }
 
     public CompletableFuture<Feedbacks> getAll() {
-        CompletableFuture<Feedbacks> completableFuture = new CompletableFuture<>();
+        CompletableFuture<String> completableFuture = new CompletableFuture<>();
 
-        return this.createRequest(
-                Request.Method.GET,
-                this.getFeedbackPath(),
-                s -> completableFuture.complete(this.gson.fromJson(s, Feedbacks.class)),
-                completableFuture
-        );
+        RequestBuilder.get(this.requestQueue, this.getFeedbackPath())
+                .setCompletableFuture(completableFuture)
+                .addToRequestQueue();
+
+        return completableFuture
+                .thenApply(s -> this.gson.fromJson(s, Feedbacks.class));
     }
 
-    public void delete(int id) {
-        throw new NotImplementedException("not implemented yet");
+    public CompletableFuture<String> delete(int id) {
+        CompletableFuture<String> completableFuture = new CompletableFuture<>();
+
+        RequestBuilder.delete(this.requestQueue, this.getFeedbackPath(id))
+                .setCompletableFuture(completableFuture)
+                .addToRequestQueue();
+
+        return completableFuture;
     }
 
     /**
@@ -140,14 +99,23 @@ public class FeedbackService {
             put("location", feedback.getLocation());
         }};
 
-        CompletableFuture<Feedback> completableFuture = new CompletableFuture<>();
+        CompletableFuture<String> completableFuture = new CompletableFuture<>();
 
-        return this.createRequest(
-                Request.Method.POST,
-                this.getFeedbackPath(),
-                s -> completableFuture.complete(this.gson.fromJson(s, Feedback.class)),
-                completableFuture,
-                values
-        );
+        RequestBuilder requestBuilder = new RequestBuilder(this.requestQueue, this.getFeedbackPath())
+                .setJsonAsBody(this.gson.toJson(values, Map.class))
+                .setCompletableFuture(completableFuture);
+
+        if(feedback.getId() > 0) {
+            requestBuilder
+                    .usePut()
+                    .setUrl(this.getFeedbackPath(feedback.getId()));
+        } else {
+            requestBuilder
+                    .usePost();
+        }
+
+        requestBuilder.addToRequestQueue();
+
+        return completableFuture.thenApply(s -> this.gson.fromJson(s, Feedback.class));
     }
 }

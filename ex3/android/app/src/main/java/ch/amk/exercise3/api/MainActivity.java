@@ -109,8 +109,6 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
                 .size(IconicsSize.dp(24)));
     }
 
-
-
     private void setupFeedbackList() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -198,5 +196,6 @@ public class MainActivity extends AppCompatActivity implements ItemTouchCallback
     @Override
     public void itemSwiped(int i, int i1) {
         this.feedbackService.delete((int)this.itemAdapter.getAdapterItem(i).getIdentifier());
+        this.itemAdapter.remove(i);
     }
 }

@@ -56,6 +56,16 @@ public class RequestBuilder {
                 .usePost();
     }
 
+    public static RequestBuilder delete(RequestQueue requestQueue, String url) {
+        return new RequestBuilder(requestQueue, url)
+                .useDelete();
+    }
+
+    public static RequestBuilder put(RequestQueue requestQueue, String url) {
+        return new RequestBuilder(requestQueue, url)
+                .usePut();
+    }
+
     public RequestBuilder putHeader(String name, String value) {
         headers.put(name, value);
         return this;
@@ -66,9 +76,10 @@ public class RequestBuilder {
         return this;
     }
 
-//    public RequestBuilder setCompletableFuture(CompletableFuture<?> completableFuture, Function<String, ?> parser) {
-
-//    }
+    public RequestBuilder setUrl(String url) {
+        this.url = url;
+        return this;
+    }
 
     public RequestBuilder setCompletableFuture(CompletableFuture<String> completableFuture) {
         this.setErrorListener(completableFuture::completeExceptionally);
