@@ -1,0 +1,94 @@
+# Dagger2 skeleton
+
+:mainSource: ../app/src/main/java/ch/amk/exercise4/mqtt/
+
+Dagger is greate for dependency injection. Dependency injection is greate to test
+parts of a system. So lets use dagger (dagger2 since it supports android better) for
+our application.
+
+Following we have a look on how a dagger2 can be integrated into to application without
+getting annoying. For further readings, checkout the https://dagger.dev/[offical dagger2 pages] or following blog
+helpful posts. I wont be explaining how it actually works here, but more provide a getting started
+guide, to have a functioning dagger2 application:
+
+* https://blog.mindorks.com/introduction-to-dagger-2-using-dependency-injection-in-android-part-1-223289c2a01b[actual introduction]
+* https://medium.com/@harivigneshjayapalan/dagger-2-for-android-beginners-advanced-part-i-1e14fccf2cc8[dagger2 from beginners to adnvanced]
+
+## include dagger2 dependencies
+
+Add following to the build.gradle file:
+
+.app/build.gradle
+[source, gradle]
+----
+include::../app/build.gradle[tags=extBlock;dependenciesBlock;dagger2Include]
+----
+include::../app/build.gradle[tags=dagger2IncludeDesc]
+
+[NOTE]
+====
+After adding the dependencies, be sure to sync project with the gradle files in
+the android studio.
+====
+
+### Recommended gradle changes
+
+tweaking the *app/build.gradle* as following can improve to code:
+
+.app/build.gradle
+[source, gradle]
+----
+include::../app/build.gradle[tags=androidBlock;recommendedOptions]
+----
+include::../app/build.gradle[tags=recommendedOptionsDesc]
+
+## Setup ActivityModule
+
+First add an module which provides the activity. It will enable injecting
+the default *MainActivity*.
+
+.app/src/main/../CoreActivityModule.java
+[source, java]
+----
+include::{mainSource}CoreActivityModule.java[tags=!*]
+----
+include::{mainSource}CoreActivityModule.java[tags=description]
+
+## Setup Core component
+
+Dagger2 creates a dependency tree. This tree has a root object called component, which includes all
+subtree dependencies. leaves of the dependency tree are modules und branches are subcomponents.
+
+To be able to create the tree, the first thing we need is the root component, create it as following:
+
+.app/src/main/../CoreComponent.java
+[source, java]
+----
+include::{mainSource}CoreComponent.java[tags=!*]
+----
+include::{mainSource}CoreComponent.java[tags=description]
+
+## Setup CoreApplication
+
+Lets override the Android base *Application* to create the
+Dagger dependency tree on startup.
+
+.app/src/main/../CoreApplication.java
+[source, java]
+----
+include::{mainSource}CoreApplication.java[tags=!*]
+----
+include::{mainSource}CoreApplication.java[tags=description]
+
+## MainActivity
+
+Since android does not support dagger2 out of the box, we have to call an
+injection function. This can be done as following:
+
+.app/src/main/../MainActivity.java
+[source, java]
+----
+include::{mainSource}MainActivity.java[tags=AndroidDagger2Injection;class]
+----
+
+include::{mainSource}MainActivity.java[tags=AndroidDagger2InjectionDesc]

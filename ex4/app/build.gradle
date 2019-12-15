@@ -1,0 +1,112 @@
+apply plugin: 'com.android.application'
+
+
+// tag::extBlock[]
+ext {
+    // ...
+// end::extBlock[]
+
+    // tag::dagger2Include[]
+    daggerVersion = "2.25.2"
+    // end::dagger2Include[]
+
+// tag::extBlock[]
+}
+// end::extBlock[]
+
+// tag::androidBlock[]
+android {
+    // ...
+// end::androidBlock[]
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        applicationId "ch.amk.exercise4.mqtt"
+        minSdkVersion 26
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // tag::recommendedOptions[]
+    compileOptions { // <1>
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    // end::recommendedOptions[]
+
+    /**
+tag::recommendedOptionsDesc[]
+<1> Enable using Java 1.8 features like lambdas, highly recommended. It will increase
+     the workflow and helping improving the writing style.
+end::recommendedOptionsDesc[]
+     */
+
+    // tag::recommendedOptions[]
+    testOptions {
+        unitTests.includeAndroidResources = true // <2>
+        unitTests.returnDefaultValues = true // <3>
+    }
+    // end::recommendedOptions[]
+
+/**
+tag::recommendedOptionsDesc[]
+<2> helps with the unit tests, checkout the
+ https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.html#com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions:includeAndroidResources[documentaiton]
+<3> prevents errors, but can also end up with NullPointer exceptions while Android.Log is used.
+ to prevent those, have a look at the https://github.com/bjoernQ/unmock-plugin[unMock plugin]
+end::recommendedOptionsDesc[]
+*/
+// tag::androidBlock[]
+}
+// end::androidBlock[]
+
+// tag::dependenciesBlock[]
+dependencies {
+    // ...
+    // end::dependenciesBlock[]
+
+    // tag::dagger2Include[]
+
+    implementation "com.google.dagger:dagger:${project.daggerVersion}"
+    implementation "com.google.dagger:dagger-android:${project.daggerVersion}"
+    // end::dagger2Include[]
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    // tag::dagger2Include[]
+
+    annotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}"
+    // end::dagger2Include[]
+
+    testImplementation 'junit:junit:4.12'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // tag::dagger2Include[]
+
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}" // <1>
+    androidTestAnnotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}" // <1>
+    // end::dagger2Include[]
+
+ /** tag::dagger2IncludeDesc[]
+<1> Enable access of the Annotation Processor in the Insturmented tests. Needed to be able to provide
+  mocked versions
+  end::dagger2IncludeDesc[] */
+
+// tag::dependenciesBlock[]
+}
+// end::dependenciesBlock[]
