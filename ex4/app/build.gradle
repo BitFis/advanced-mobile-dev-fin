@@ -10,6 +10,13 @@ ext {
     daggerVersion = "2.25.2"
     // end::dagger2Include[]
 
+    // tag::theGreatThree[]
+    // test libraries
+    mockitoVersion = "3.1.0"
+    hamcrestVersion = "2.1"
+    awaitilityVersion = "4.0.1"
+    // end::theGreatThree[]
+
 // tag::extBlock[]
 }
 // end::extBlock[]
@@ -91,7 +98,24 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}"
     // end::dagger2Include[]
 
-    testImplementation 'junit:junit:4.12'
+    // tag::theGreatThree[]
+    testImplementation('junit:junit:4.12') {
+        exclude group: 'org.hamcrest' // <1>
+    }
+    testImplementation('com.android.support.test:rules:1.0.2') {
+        exclude group: 'org.hamcrest' // <1>
+    }
+    testImplementation('com.android.support.test:runner:1.0.2') {
+        exclude group: 'org.hamcrest' // <1>
+    }
+    testImplementation "org.awaitility:awaitility:${project.awaitilityVersion}"
+    testImplementation "org.hamcrest:hamcrest:${project.hamcrestVersion}"
+    testImplementation "org.mockito:mockito-core:${project.mockitoVersion}"
+    // end::theGreatThree[]
+
+    /** tag::theGreatThreeDesc[]
+<1> needed, since awaitility is dependent on a newer hamcrest version. This will prevent build errors
+        end::theGreateThreeDesc[] */
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

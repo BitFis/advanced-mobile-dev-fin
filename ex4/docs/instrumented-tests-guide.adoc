@@ -1,0 +1,74 @@
+# Instrumented tests in Android
+
+:insturmentedSource: ../app/src/androidTest/java/ch/amk/exercise4/mqtt/
+
+Android provide instrumented tests, which are test which are run
+on a final device or emulator. This helps to test functionalities
+in a real environment. Also it enables to create automated tests
+for the GUI.
+
+## Add dependencies
+
+Creating a new android project, all needed dependencies should be
+already included. Also, there should be file *ExampleInstrumentedTest.java*.
+Run this file to test, if Instrumented tests work
+
+### Recomendation
+
+Add mockito, hamcrest and awaitability to the test dependencies.
+
+* http://hamcrest.org/[hamcrest] has great comparison functions
+* https://site.mockito.org/[mockito] enables simple mocking
+* https://github.com/awaitility/awaitility[awaitility] helps with asynchrone function tests,
+  preventing the need for `Thread.sleep()` calls.
+
+Following includes enables all of them:
+
+.app/build.gradle
+[source, gradle]
+----
+include::../app/build.gradle[tags=extBlock;dependenciesBlock;theGreatThree]
+----
+include::../app/build.gradle[tags=theGreatThreeDesc]
+
+## Simple activity start
+
+To get a feeling for instrumented tests, lets just start an activity.
+
+.app/src/androidTest/../StartMainActivityInstrumentedTest.java
+[source,java]
+----
+include::{insturmentedSource}StartMainActivityInstrumentedTest.java[tags=!*]
+----
+include::{insturmentedSource}StartMainActivityInstrumentedTest.java[tags=description]
+
+By running this test, the emulator should start the MainActivity
+and close it right away.
+
+The `ActivityScenarioRule` also enables also following functionalities:
+
+* `rule.getScenario().moveToState` change the current state of the Activity
+* `rule.getScenario().recreate` recreate the Activity
+
+[NOTE]
+====
+By using the Debug mode, it is really helpful to set an breakpoint
+at the end of the test and start a specific activity without changing
+the AndroidManifest.xml file.
+====
+
+## Clicking buttons
+
+
+## Show GUI hierarchy
+
+
+## Using Edit Text
+
+
+
+### Add UIAnimator
+
+
+
+### Enter into textfield

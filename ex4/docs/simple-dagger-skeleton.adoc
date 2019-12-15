@@ -91,3 +91,15 @@ include::{mainSource}MainActivity.java[tags=AndroidDagger2Injection;class]
 ----
 
 include::{mainSource}MainActivity.java[tags=AndroidDagger2InjectionDesc]
+
+## Update AndroidManifest
+
+Finally if everything is done, lets update the manifest file:
+
+.AndroidManifest
+[source, xml]
+----
+...
+include::../app/src/main/AndroidManifest.xml[tags=application]
+...
+----

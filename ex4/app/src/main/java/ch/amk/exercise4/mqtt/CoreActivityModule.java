@@ -19,4 +19,8 @@ public interface CoreActivityModule { // <2>
     but it needs to have the *@ContributesAndroidInjector* annotation.
         end::description[] */
 
+    // tag::otherActivities[]
+
+    // tag::otherActivities[]
+
 }
