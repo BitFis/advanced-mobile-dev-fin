@@ -18,7 +18,7 @@ public class CoreApplication extends Application implements HasAndroidInjector {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.createComponent();
+        this.createComponent(); // <2>
     }
 
     /** tag::description[]

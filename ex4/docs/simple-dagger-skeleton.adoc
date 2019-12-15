@@ -3,8 +3,7 @@
 :mainSource: ../app/src/main/java/ch/amk/exercise4/mqtt/
 
 Dagger is greate for dependency injection. Dependency injection is greate to test
-parts of a system. So lets use dagger (dagger2 since it supports android better) for
-our application.
+parts of a system. So lets use dagger (dagger2 since it supports android better).
 
 Following we have a look on how a dagger2 can be integrated into to application without
 getting annoying. For further readings, checkout the https://dagger.dev/[offical dagger2 pages] or following blog
@@ -19,7 +18,7 @@ guide, to have a functioning dagger2 application:
 Add following to the build.gradle file:
 
 .app/build.gradle
-[source, gradle]
+[source, swagger]
 ----
 include::../app/build.gradle[tags=extBlock;dependenciesBlock;dagger2Include]
 ----

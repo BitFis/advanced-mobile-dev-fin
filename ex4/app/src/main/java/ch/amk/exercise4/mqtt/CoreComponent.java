@@ -15,6 +15,9 @@ import dagger.android.AndroidInjector;
 <1> Include the `AndroidInjectionModule`, it provides the `DispatchingAndroidInjector<Object>` used by the `CoreApplication`
 <2> Include dependent Module. Any Module providing implementations can be set here.
             end::description[] */
+    // tag::extendedModules[]
+
+    // end::extendedModules[]
 })
 public interface CoreComponent extends AndroidInjector<CoreApplication> {
     @Component.Builder // <3>

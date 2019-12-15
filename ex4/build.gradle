@@ -24,6 +24,10 @@ asciidoctor {
     }
     outputDir  file('build/docs')
     baseDirFollowsSourceDir()
+    attributes 'icons': 'font',
+        'setanchors': '',
+        'rootDir': file(rootDir),
+        'docinfo1': ''
 }
 
 allprojects {
