@@ -18,7 +18,7 @@ public class MqttModule {
 
     @Provides
     @Named("mqtt-clientid")
-    public String procideClientId() { return "a:i5u4t3:lzurcher"; }
+    public String provideClientId() { return "a:i5u4t3:lzurcher"; }
 
     @Provides
     public MqttConnectOptions provideMqttConnectOptions() {
