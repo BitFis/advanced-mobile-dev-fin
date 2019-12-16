@@ -95,6 +95,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     implementation "org.eclipse.paho:org.eclipse.paho.client.mqttv3:${project.mqtt3Version}"
+    implementation "com.google.android.material:material:1.1.0-alpha06"
+
+    // tag::uiautomator[]
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+    // end::uiautomator[]
+
 
     // tag::dagger2Include[]
 
@@ -119,7 +125,7 @@ dependencies {
 
     /** tag::theGreatThreeDesc[]
 <1> needed, since awaitility is dependent on a newer hamcrest version. This will prevent build errors
-        end::theGreateThreeDesc[] */
+        end::theGreatThreeDesc[] */
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

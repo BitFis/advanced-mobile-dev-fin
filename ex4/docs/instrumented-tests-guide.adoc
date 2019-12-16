@@ -59,16 +59,62 @@ the AndroidManifest.xml file.
 
 ## Clicking buttons
 
+To be able to click a button, first it the button has to be found. Expresso provides the
+`onView` function to find an object.
+
+[source, java]
+----
+// find by R.id
+Espresso.onView(R.id.element_id);
+
+// using a matcher
+Espresso.onView(ViewMatchers.withText("text"));
+Espresso.onView(ViewMatchers.withContentDescription("text"));
+----
+
+Actions can be performed on the result with the function `perform()`.
+
+[source, java]
+----
+// run click action
+Espresso.onView(R.id.element_id).perform(ViewActions.click());
+----
 
 ## Show GUI hierarchy
 
+The Gui hierarchy can be printed if an objected is selected, which can not be found. The
+hirarchy will show up in the log as exception.
+
+[source, java]
+----
+onView(withText("XYZ")).perform(click());
+----
 
 ## Using Edit Text
 
-
+To be able to edit EditText, or do any other actions then the once provided by
+ViewAction (like swiping) UIAnimator is needed.
 
 ### Add UIAnimator
 
-
+.app/build.gradle
+[source, gradle]
+----
+include::../app/build.gradle[tags=uiautomator;dependenciesBlock]
+----
 
 ### Enter into textfield
+
+The `R.id` can not be used to find the object, since the UIAnimator does not know
+about the ids. The easiest way to find the objects is eather by the content or the
+field description.
+
+[source, java]
+----
+device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+
+// changing the text of the TextEdit with description *message_box*
+device.findObject(new UiSelector().description("message_box")).setText("new text content");
+----
+
+
