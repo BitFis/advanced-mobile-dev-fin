@@ -24,6 +24,7 @@ public class MqttModule {
     public MqttConnectOptions provideMqttConnectOptions() {
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setCleanSession(true);
+        connOpts.setConnectionTimeout(5);
         return connOpts;
     }
 }

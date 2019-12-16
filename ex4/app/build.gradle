@@ -54,10 +54,10 @@ android {
     // end::recommendedOptions[]
 
     /**
-tag::recommendedOptionsDesc[]
-<1> Enable using Java 1.8 features like lambdas, highly recommended. It will increase
+     tag::recommendedOptionsDesc[]
+     <1> Enable using Java 1.8 features like lambdas, highly recommended. It will increase
      the workflow and helping improving the writing style.
-end::recommendedOptionsDesc[]
+     end::recommendedOptionsDesc[]
      */
 
     // tag::recommendedOptions[]
@@ -68,13 +68,13 @@ end::recommendedOptionsDesc[]
     // end::recommendedOptions[]
 
 /**
-tag::recommendedOptionsDesc[]
-<2> helps with the unit tests, checkout the
+ tag::recommendedOptionsDesc[]
+ <2> helps with the unit tests, checkout the
  https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.html#com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions:includeAndroidResources[documentaiton]
-<3> prevents errors, but can also end up with NullPointer exceptions while Android.Log is used.
+ <3> prevents errors, but can also end up with NullPointer exceptions while Android.Log is used.
  to prevent those, have a look at the https://github.com/bjoernQ/unmock-plugin[unMock plugin]
-end::recommendedOptionsDesc[]
-*/
+ end::recommendedOptionsDesc[]
+ */
 // tag::androidBlock[]
 }
 // end::androidBlock[]
@@ -97,11 +97,6 @@ dependencies {
     implementation "org.eclipse.paho:org.eclipse.paho.client.mqttv3:${project.mqtt3Version}"
     implementation "com.google.android.material:material:1.1.0-alpha06"
 
-    // tag::uiautomator[]
-    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
-    // end::uiautomator[]
-
-
     // tag::dagger2Include[]
 
     annotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}"
@@ -121,26 +116,54 @@ dependencies {
     testImplementation "org.awaitility:awaitility:${project.awaitilityVersion}"
     testImplementation "org.hamcrest:hamcrest:${project.hamcrestVersion}"
     testImplementation "org.mockito:mockito-core:${project.mockitoVersion}"
+
+    // end::theGreatThree[]
+
+    // tag::uiautomator[]
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
+    // end::uiautomator[]
+
+
+    /** tag::theGreatThreeDesc[]
+     <1> needed, since awaitility is dependent on a newer hamcrest version. This will prevent build errors
+     end::theGreatThreeDesc[] */
+
+    // tag::theGreatThree[]
+    androidTestImplementation('androidx.test.ext:junit:1.1.0') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.1') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation('com.android.support.test:rules:1.0.2') { // <2>
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation('com.android.support.test:runner:1.0.2') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation "org.awaitility:awaitility:${project.awaitilityVersion}"
+    androidTestImplementation "org.hamcrest:hamcrest:${project.hamcrestVersion}"
+    androidTestImplementation "org.mockito:mockito-core:${project.mockitoVersion}"
     // end::theGreatThree[]
 
     /** tag::theGreatThreeDesc[]
-<1> needed, since awaitility is dependent on a newer hamcrest version. This will prevent build errors
-        end::theGreatThreeDesc[] */
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+     <2> if missing, strange permission errors will popup
+     end::theGreatThreeDesc[] */
 
     // tag::dagger2Include[]
 
-    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}" // <1>
-    androidTestAnnotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}" // <1>
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}"
+    // <1>
+    androidTestAnnotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}"
+    // <1>
     // end::dagger2Include[]
 
- /** tag::dagger2IncludeDesc[]
-<1> Enable access of the Annotation Processor in the Insturmented tests. Needed to be able to provide
-  mocked versions
-  end::dagger2IncludeDesc[] */
+    /** tag::dagger2IncludeDesc[]
+     <1> Enable access of the Annotation Processor in the Insturmented tests. Needed to be able to provide
+     mocked versions
+     end::dagger2IncludeDesc[] */
 
 // tag::dependenciesBlock[]
 }
 // end::dependenciesBlock[]
+

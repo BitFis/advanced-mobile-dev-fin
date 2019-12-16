@@ -13,9 +13,12 @@ import javax.inject.Named;
 
 public class MqttService {
 
-    MqttClient mqttClient;
+    private MqttClient mqttClient;
 
-    MqttConnectOptions mqttConnectOptions;
+    private MqttConnectOptions mqttConnectOptions;
+
+    private String broker;
+    private String clientId;
 
     @Inject
     public MqttService(
@@ -24,22 +27,28 @@ public class MqttService {
             MqttConnectOptions mqttConnectOptions
     ) {
         this.mqttConnectOptions = mqttConnectOptions;
-        try {
-            this.mqttClient = new MqttClient(broker, clientId, new MemoryPersistence());
-        } catch (MqttException e) {
-            throw new RuntimeException(e);
-        }
+        this.clientId = clientId;
+        this.broker = broker;
     }
 
     public void connect() throws MqttException {
+        this.mqttClient = new MqttClient(broker, clientId, new MemoryPersistence());
         this.mqttClient.connect(this.mqttConnectOptions);
     }
 
+    private void checkConnected() throws MqttException {
+        if(this.mqttClient == null) throw new MqttException(MqttException.REASON_CODE_CLIENT_CONNECTED);
+    }
+
     public void subscribe(String topicfilter, IMqttMessageListener listener) throws MqttException {
+        this.checkConnected();
+
         this.mqttClient.subscribe(topicfilter, listener);
     }
 
     public void publish(String topic, String message) throws MqttException {
+        this.checkConnected();
+
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setPayload(message.getBytes());
 

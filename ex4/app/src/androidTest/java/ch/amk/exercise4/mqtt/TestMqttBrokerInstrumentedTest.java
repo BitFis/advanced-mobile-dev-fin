@@ -1,9 +1,13 @@
 package ch.amk.exercise4.mqtt;
 
+import android.app.Instrumentation;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.UiDevice;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -27,7 +31,7 @@ public class TestMqttBrokerInstrumentedTest {
     @Before
     public void testMqttClientFactory() throws MqttException {
         this.mqttService = new MqttService(
-                new MqttModule().procideClientId(),
+                new MqttModule().provideClientId(),
                 new MqttModule().provideBroker(),
                 new MqttModule().provideMqttConnectOptions()
         );

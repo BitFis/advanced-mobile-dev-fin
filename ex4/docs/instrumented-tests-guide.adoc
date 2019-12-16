@@ -1,11 +1,13 @@
 # Instrumented tests in Android
 
-:insturmentedSource: ../app/src/androidTest/java/ch/amk/exercise4/mqtt/
+:insturmentedSource: ../app/src/androidTest/java/ch/amk/exercise4/mqtt
 
 Android provide instrumented tests, which are test which are run
 on a final device or emulator. This helps to test functionalities
 in a real environment. Also it enables to create automated tests
 for the GUI.
+
+https://android.github.io/android-test/downloads/espresso-cheat-sheet-2.1.0.pdf[A helpful document is the espresso cheat sheet], which I recommend you to checkout.
 
 ## Add dependencies
 
@@ -38,9 +40,9 @@ To get a feeling for instrumented tests, lets just start an activity.
 .app/src/androidTest/../StartMainActivityInstrumentedTest.java
 [source,java]
 ----
-include::{insturmentedSource}StartMainActivityInstrumentedTest.java[tags=!*]
+include::{insturmentedSource}/StartMainActivityInstrumentedTest.java[tags=!*]
 ----
-include::{insturmentedSource}StartMainActivityInstrumentedTest.java[tags=description]
+include::{insturmentedSource}/StartMainActivityInstrumentedTest.java[tags=description]
 
 By running this test, the emulator should start the MainActivity
 and close it right away.
@@ -87,13 +89,13 @@ hirarchy will show up in the log as exception.
 
 [source, java]
 ----
-onView(withText("XYZ")).perform(click());
+Espresso.onView(ViewMatchers.withText("XYZ")).perform(ViewActions.click());
 ----
 
 ## Using Edit Text
 
-To be able to edit EditText, or do any other actions then the once provided by
-ViewAction (like swiping) UIAnimator is needed.
+If advanced actions are needed, the https://developer.android.com/training/testing/ui-automator[UIAnimator] is bringing those features. Including
+to wait for an Object to appear, pressing buttons, ec.
 
 ### Add UIAnimator
 
@@ -103,15 +105,30 @@ ViewAction (like swiping) UIAnimator is needed.
 include::../app/build.gradle[tags=uiautomator;dependenciesBlock]
 ----
 
-### Enter into textfield
+### Using the UIAnimator
 
-The `R.id` can not be used to find the object, since the UIAnimator does not know
-about the ids. The easiest way to find the objects is eather by the content or the
-field description.
+The be able to use the `UIAnimator`, we first have to create an `UiDevice`, It is
+recommended to make it a variable in the test:
 
 [source, java]
 ----
-device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+include::{insturmentedSource}/ExampleExpressoInstrumentedTests.java[tags=uiDevice]
+----
+
+Next, like with the `Espresso`, we have to select our target components:
+
+[source, java]
+----
+include::{insturmentedSource}/ExampleExpressoInstrumentedTests.java[tags=selectionExample]
+----
+
+### Enter into textfield
+
+Same as with `espresso`
+
+[source, java]
+----
+UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
 // changing the text of the TextEdit with description *message_box*
 device.findObject(new UiSelector().description("message_box")).setText("new text content");

@@ -1,5 +1,6 @@
 package ch.amk.exercise4.mqtt;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -49,15 +50,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // end::AndroidDagger2Injection[]
 
+        // tag::AndroidDagger2Injection[]
+    }
+    // end::AndroidDagger2Injection[]
+
+    private void connectToMqtt() {
         try {
             this.mqttService.connect();
             this.mqttService.subscribe("test/topic", (topic, message) -> {
                 this.showPopup("recevied (" + topic + "): " + message);
             });
+            this.runOnUiThread(() -> this.showPopup("connected to MQTT"));
         } catch (MqttException e) {
+            this.runOnUiThread(() -> this.showPopup("connection to MQTT broker failed!"));
             Log.i(TAG, "connection to mqtt server failed", e);
         }
+    }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        new Thread(this::connectToMqtt).start();
 
         ((Button)this.findViewById(R.id.action_button))
                 .setOnClickListener(v -> {
@@ -70,13 +84,13 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "publishing failed", e);
                     }
                 });
-
-        // tag::AndroidDagger2Injection[]
     }
-    // end::AndroidDagger2Injection[]
+
     /** tag::AndroidDagger2InjectionDesc[]
 <1> Inject itself, all attributes with `@Inject` will be resolved.
         end::AndroidDagger2InjectionDesc[] */
+
+
 
     public void showPopup(String message) {
         Snackbar
