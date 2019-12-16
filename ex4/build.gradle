@@ -20,9 +20,9 @@ plugins {
 asciidoctor {
     sourceDir  file('docs')
     sources {
-        include 'simple-dagger-skeleton.adoc'
+        include 'simple-dagger-skeleton.adoc', 'instrumented-tests-guide.adoc'
     }
-    outputDir  file('build/docs')
+    outputDir  file('../docs')
     baseDirFollowsSourceDir()
     attributes 'icons': 'font',
         'setanchors': '',

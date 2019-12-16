@@ -21,6 +21,6 @@ public interface CoreActivityModule { // <2>
 
     // tag::otherActivities[]
 
-    // tag::otherActivities[]
+    // end::otherActivities[]
 
 }
