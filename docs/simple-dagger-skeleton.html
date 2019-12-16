@@ -485,19 +485,18 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}"
 
-    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}" <i class="conum" data-value="1"></i><b>(1)</b>
-    androidTestAnnotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}" <i class="conum" data-value="1"></i><b>(1)</b>
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:${project.daggerVersion}"
+    <i class="conum" data-value="1"></i><b>(1)</b>
+    androidTestAnnotationProcessor "com.google.dagger:dagger-android-processor:${project.daggerVersion}"
+    <i class="conum" data-value="1"></i><b>(1)</b>
 }</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Enable access of the Annotation Processor in the Insturmented tests. Needed to be able to provide
-mocked versions</td>
-</tr>
-</table>
+<div class="literalblock">
+<div class="content">
+<pre>&lt;1&gt; Enable access of the Annotation Processor in the Insturmented tests. Needed to be able to provide
+mocked versions</pre>
+</div>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -535,24 +534,15 @@ the android studio.</p>
 }</code></pre>
 </div>
 </div>
-<div class="colist arabic">
-<table>
-<tr>
-<td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Enable using Java 1.8 features like lambdas, highly recommended. It will increase
-the workflow and helping improving the writing style.</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>helps with the unit tests, checkout the
-<a href="https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.html#com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions:includeAndroidResources">documentaiton</a></td>
-</tr>
-<tr>
-<td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>prevents errors, but can also end up with NullPointer exceptions while Android.Log is used.
-to prevent those, have a look at the <a href="https://github.com/bjoernQ/unmock-plugin">unMock plugin</a></td>
-</tr>
-</table>
+<div class="literalblock">
+<div class="content">
+<pre>    &lt;1&gt; Enable using Java 1.8 features like lambdas, highly recommended. It will increase
+    the workflow and helping improving the writing style.
+&lt;2&gt; helps with the unit tests, checkout the
+https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.html#com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions:includeAndroidResources[documentaiton]
+&lt;3&gt; prevents errors, but can also end up with NullPointer exceptions while Android.Log is used.
+to prevent those, have a look at the https://github.com/bjoernQ/unmock-plugin[unMock plugin]</pre>
+</div>
 </div>
 </div>
 </div>
@@ -576,7 +566,10 @@ import dagger.android.ContributesAndroidInjector;
 public interface CoreActivityModule { <i class="conum" data-value="2"></i><b>(2)</b>
 
     @ContributesAndroidInjector(modules = { })
-    abstract MainActivity contributeFeedbackFormActivityAndroidInjector(); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+    abstract MainActivity contributeFeedbackFormActivityAndroidInjector(); <i class="conum" data-value="3"></i><b>(3)</b>
+
+
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -781,16 +774,6 @@ public class MainActivity extends AppCompatActivity {
 <div class="title">AndroidManifest</div>
 <div class="content">
 <pre class="highlight"><code class="language-xml" data-lang="xml">...
-    &lt;application
-        android:name=".CoreApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"&gt;
-    &lt;!-- ... --&gt;
-    &lt;/application&gt;
 ...</code></pre>
 </div>
 </div>
@@ -800,7 +783,7 @@ public class MainActivity extends AppCompatActivity {
 <div id="footer">
 <div id="footer-text">
 Version unspecified<br>
-Last updated 2019-12-15 22:42:07 +0200
+Last updated 2019-12-16 09:12:19 +0200
 </div>
 </div>
 </body>

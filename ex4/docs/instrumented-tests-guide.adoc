@@ -31,6 +31,7 @@ Following includes enables all of them:
 ----
 include::../app/build.gradle[tags=extBlock;dependenciesBlock;theGreatThree]
 ----
+
 include::../app/build.gradle[tags=theGreatThreeDesc]
 
 ## Simple activity start
@@ -107,8 +108,8 @@ include::../app/build.gradle[tags=uiautomator;dependenciesBlock]
 
 ### Using the UIAnimator
 
-The be able to use the `UIAnimator`, we first have to create an `UiDevice`, It is
-recommended to make it a variable in the test:
+To be able to use the `UIAnimator`, we first have to create an `UiDevice`, It is
+recommended to make it a class attribute in the test:
 
 [source, java]
 ----
@@ -119,19 +120,33 @@ Next, like with the `Espresso`, we have to select our target components:
 
 [source, java]
 ----
-include::{insturmentedSource}/ExampleExpressoInstrumentedTests.java[tags=selectionExample]
+include::{insturmentedSource}/ExampleExpressoInstrumentedTests.java[tags=selectionExample;!ignore]
 ----
+include::{insturmentedSource}/ExampleExpressoInstrumentedTests.java[tags=selectionExampleDesc]
 
-### Enter into textfield
-
-Same as with `espresso`
+Basic JUnit assertions can then be used to test some things:
 
 [source, java]
 ----
-UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
-// changing the text of the TextEdit with description *message_box*
-device.findObject(new UiSelector().description("message_box")).setText("new text content");
+include::{insturmentedSource}/ExampleExpressoInstrumentedTests.java[tags=assertExample;!ignore]
 ----
+
+## Enter text into EditText
+
+This can be done with `Espresso` or `UIAnimator`
+
+[source, java]
+----
+include::{insturmentedSource}/ExampleExpressoInstrumentedTests.java[tags=changingText]
+----
+
+## Further
+
+Further checkout those
+https://github.com/android/testing-samples/blob/master/ui/uiautomator/BasicSample/app/src/androidTest/java/com/example/android/testing/uiautomator/BasicSample/ChangeTextBehaviorTest.java[android testing samples],
+they contain more ideas on how tests can be executed. Also
+https://github.com/BitFis/advanced-mobile-dev-fin/blob/master/ex3/android/app/src/androidTest/java/ch/amk/exercise3/api/ui/FeedbackViewInstrumentedTest.java[exercise 3
+contains some CRUD tests combined with the recycling view],
+which also uses Dagger2 to mock backend services cleanly in the activity.
 
 

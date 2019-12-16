@@ -447,6 +447,9 @@ on a final device or emulator. This helps to test functionalities
 in a real environment. Also it enables to create automated tests
 for the GUI.</p>
 </div>
+<div class="paragraph">
+<p><a href="https://android.github.io/android-test/downloads/espresso-cheat-sheet-2.1.0.pdf">A helpful document is the espresso cheat sheet</a>, which I recommend you to checkout.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -503,6 +506,22 @@ dependencies {
     testImplementation "org.awaitility:awaitility:${project.awaitilityVersion}"
     testImplementation "org.hamcrest:hamcrest:${project.hamcrestVersion}"
     testImplementation "org.mockito:mockito-core:${project.mockitoVersion}"
+
+    androidTestImplementation('androidx.test.ext:junit:1.1.0') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.1') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation('com.android.support.test:rules:1.0.2') { <i class="conum" data-value="2"></i><b>(2)</b>
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation('com.android.support.test:runner:1.0.2') {
+        exclude group: 'org.hamcrest'
+    }
+    androidTestImplementation "org.awaitility:awaitility:${project.awaitilityVersion}"
+    androidTestImplementation "org.hamcrest:hamcrest:${project.hamcrestVersion}"
+    androidTestImplementation "org.mockito:mockito-core:${project.mockitoVersion}"
 }</code></pre>
 </div>
 </div>
@@ -511,6 +530,10 @@ dependencies {
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
 <td>needed, since awaitility is dependent on a newer hamcrest version. This will prevent build errors</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>if missing, strange permission errors will popup</td>
 </tr>
 </table>
 </div>
@@ -528,8 +551,11 @@ dependencies {
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">package ch.amk.exercise4.mqtt;
 
+import android.Manifest;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -641,7 +667,7 @@ hirarchy will show up in the log as exception.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">onView(withText("XYZ")).perform(click());</code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">Espresso.onView(ViewMatchers.withText("XYZ")).perform(ViewActions.click());</code></pre>
 </div>
 </div>
 </div>
@@ -650,8 +676,8 @@ hirarchy will show up in the log as exception.</p>
 <h2 id="_using_edit_text">Using Edit Text</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To be able to edit EditText, or do any other actions then the once provided by
-ViewAction (like swiping) UIAnimator is needed.</p>
+<p>If advanced actions are needed, the <a href="https://developer.android.com/training/testing/ui-automator">UIAnimator</a> is bringing those features. Including
+to wait for an Object to appear, pressing buttons, ec.</p>
 </div>
 <div class="sect2">
 <h3 id="_add_uianimator">Add UIAnimator</h3>
@@ -666,20 +692,93 @@ ViewAction (like swiping) UIAnimator is needed.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_enter_into_textfield">Enter into textfield</h3>
+<h3 id="_using_the_uianimator">Using the UIAnimator</h3>
 <div class="paragraph">
-<p>The <code>R.id</code> can not be used to find the object, since the UIAnimator does not know
-about the ids. The easiest way to find the objects is eather by the content or the
-field description.</p>
+<p>To be able to use the <code>UIAnimator</code>, we first have to create an <code>UiDevice</code>, It is
+recommended to make it a class attribute in the test:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+<pre class="highlight"><code class="language-java" data-lang="java">UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, like with the <code>Espresso</code>, we have to select our target components:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// select by description
+UiObject byDescription = device.findObject(new UiSelector().description("message_box"));
 
-// changing the text of the TextEdit with description *message_box*
-device.findObject(new UiSelector().description("message_box")).setText("new text content");</code></pre>
+// select by R.ID
+UiObject2 byRId = device.findObject(By.res(
+        "ch.amk.exercise4.mqtt", <i class="conum" data-value="1"></i><b>(1)</b>
+        "message_box" <i class="conum" data-value="2"></i><b>(2)</b>
+));
+
+// select by content, also has textContains for some part of content, textMatches for regex, ...
+UiObject byContent = device.findObject(new UiSelector().text("Message"));</code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The package name of the activity</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The R.id, sadly <code>R.id.message_box</code> does not work.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Basic JUnit assertions can then be used to test some things:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">UiObject element = device.findObject(new UiSelector().description("message_box"));
+
+// check if exists
+assertTrue(element.exists());</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_enter_text_into_edittext">Enter text into EditText</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This can be done with <code>Espresso</code> or <code>UIAnimator</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">this.rule.getScenario().onActivity(activity -&gt; {
+    // ViewActions do not work here
+});
+
+// change text with espresso
+onView(withId(R.id.message_box))
+    .perform(replaceText("Hello World"));
+
+// change text with UiAnimator
+device.findObject(By.res("ch.amk.exercise4.mqtt", "message_box"))
+        .setText("Hello World");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further">Further</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Further checkout those
+<a href="https://github.com/android/testing-samples/blob/master/ui/uiautomator/BasicSample/app/src/androidTest/java/com/example/android/testing/uiautomator/BasicSample/ChangeTextBehaviorTest.java">android testing samples</a>,
+they contain more ideas on how tests can be executed. Also
+<a href="https://github.com/BitFis/advanced-mobile-dev-fin/blob/master/ex3/android/app/src/androidTest/java/ch/amk/exercise3/api/ui/FeedbackViewInstrumentedTest.java">exercise 3
+contains some CRUD tests combined with the recycling view</a>,
+which also uses Dagger2 to mock backend services cleanly in the activity.</p>
 </div>
 </div>
 </div>
@@ -687,7 +786,7 @@ device.findObject(new UiSelector().description("message_box")).setText("new text
 <div id="footer">
 <div id="footer-text">
 Version unspecified<br>
-Last updated 2019-12-16 02:13:30 +0200
+Last updated 2019-12-16 15:40:27 +0200
 </div>
 </div>
 </body>

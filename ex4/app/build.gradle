@@ -125,7 +125,7 @@ dependencies {
 
 
     /** tag::theGreatThreeDesc[]
-     <1> needed, since awaitility is dependent on a newer hamcrest version. This will prevent build errors
+<1> needed, since awaitility is dependent on a newer hamcrest version. This will prevent build errors
      end::theGreatThreeDesc[] */
 
     // tag::theGreatThree[]
@@ -147,7 +147,7 @@ dependencies {
     // end::theGreatThree[]
 
     /** tag::theGreatThreeDesc[]
-     <2> if missing, strange permission errors will popup
+<2> if missing, strange permission errors will popup
      end::theGreatThreeDesc[] */
 
     // tag::dagger2Include[]
