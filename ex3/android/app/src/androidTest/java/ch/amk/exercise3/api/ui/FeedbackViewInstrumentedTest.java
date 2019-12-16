@@ -1,13 +1,13 @@
 package ch.amk.exercise3.api.ui;
 
 import android.content.Intent;
-import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -16,9 +16,8 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
-import com.android.volley.toolbox.RequestFuture;
-
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
@@ -35,14 +34,14 @@ import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -88,11 +87,7 @@ public class FeedbackViewInstrumentedTest {
                     .withValue("Swiss Comment"));
         }}));
 
-        when(this.feedbackService.getAll()).thenAnswer(invocation -> {
-            RequestFuture<Feedbacks> requestFuture = RequestFuture.newFuture();
-            requestFuture.onResponse(feedbacks);
-            return requestFuture;
-        });
+        when(this.feedbackService.getAll()).thenReturn(CompletableFuture.completedFuture(feedbacks));
 
         this.activityRule.launchActivity(new Intent());
     }
@@ -101,19 +96,22 @@ public class FeedbackViewInstrumentedTest {
     public void testChangeItemInList() throws UiObjectNotFoundException, InterruptedException {
         onView(allOf(withId(R.id.material_drawer_name), withText(containsString("Hans Zimmer")))).perform(click());
 
+        when(this.feedbackService.save(any())).thenAnswer(invocation ->
+                CompletableFuture.completedFuture(invocation.getArgument(0))
+        );
+
         device.findObject(new UiSelector().textContains("Hans Zimmer")).setText("New Newman");
         device.findObject(new UiSelector().textContains("comment")).setText("Changed Comment");
         device.findObject(new UiSelector().textContains("fi")).setText("Zug, ch");
 
         onView(withId(R.id.button_save)).perform(click());
 
-        ArgumentCaptor<Feedback> captor = ArgumentCaptor.forClass(Feedback.class);
+        verify(this.feedbackService).save(any());
 
-        verify(this.feedbackService).save(captor.capture());
+        // give the activity time to update, max 5 seconds
+        device.waitForWindowUpdate(null, 5000);
 
-        Feedback values = captor.getValue();
-
-        // check if new can be found
+        // check if new item can be found and old one disapeared
         onView(allOf(withId(R.id.material_drawer_name), withText(containsString("New Newman")))).check(matches(isDisplayed()));
         onView(allOf(withId(R.id.material_drawer_name), withText(containsString("Hans Zimmer")))).check(doesNotExist());
     }
@@ -137,6 +135,8 @@ public class FeedbackViewInstrumentedTest {
                 .withName("Other Man")
                 .withLocation("Paris, fr")
                 .withValue("Commenting");
+
+        when(this.feedbackService.save(any())).thenReturn(CompletableFuture.completedFuture(newFeedback));
 
         device.findObject(new UiSelector().description("Name")).setText(newFeedback.getName());
         device.findObject(new UiSelector().description("Feedback")).setText(newFeedback.getValue());
